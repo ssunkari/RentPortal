@@ -9,12 +9,25 @@ router.get('/', function (req, res, next) {
     });
 });
 
+router.get('/total/:year/:month/:tenant', function (req, res, next) {
+    res.json(persistRentalData.getTentantData(normalizedCtx(req.params)));
+});
+
 /* POST home page. */
 router.post('/', function (req, res, next) {
-    persistRentalData.save('abc.log', req.body);
+    persistRentalData.saveData(req.body);
     res.render('index', {
-        title: 'Rent Portal'
+        title: 'Rent Portal',
+        message: 'Successfully logged the Data'
     });
 });
+
+function normalizedCtx(ctx) {
+    return {
+        year: ctx.year.replace(':', ''),
+        month: ctx.month.replace(':', ''),
+        tenantName: ctx.tenant.replace(':', '')
+    }
+}
 
 module.exports = router;

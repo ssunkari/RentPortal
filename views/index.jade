@@ -26,20 +26,28 @@ block content
 									table
 										thead
 											tr
-												for day in ['Utility Type','Amount']
+												for day in ['Utility Type','Util']
 													th= day
 											tbody
-												for object in ['Gas', 'Electricity', 'HouseHold']
-													tr
-														td=	object
-														td
-															input(type='text', name='amount')
+												//for object in ['Gas', 'Electricity', 'HouseHold']
+												tr
+													td=	'Gas'
+													td
+														input(type='text', name='gas')
+												tr
+													td=	'Electricity'
+													td
+														input(type='text', name='electricity')
+												tr
+													td=	'HouseHold'
+													td
+														input(type='text', name='household')
 					
 						.control-group
 							.controls
 								input(type="submit", value="Submit")
 
-
+	p=message								
 
 							//- .control-group 
 						//- 	label.control-label Select Tenant
