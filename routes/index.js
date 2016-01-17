@@ -17,6 +17,10 @@ router.get('/all/total/:year/:month', function (req, res, next) {
     res.json(persistRentalData.getAllTenantsMonthlySummary(normalizedCtx(req.params)));
 });
 
+router.get('/perperson/total/:year/:month', function (req, res, next) {
+    res.json(persistRentalData.perPersonMonthlySummary(normalizedCtx(req.params)));
+});
+
 router.get('/total/:year/:tenant', function (req, res, next) {
     res.json(persistRentalData.getTenantYearlySummary(normalizedCtx(req.params)));
 });

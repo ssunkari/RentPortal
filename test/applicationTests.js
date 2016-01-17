@@ -202,4 +202,45 @@ describe('Get all tenants montly utility summary', function () {
         });
 
     });
+
+    describe('Get tenant monthly expenditure summary', function () {
+        describe('with two tenants data', function () {
+            before(function (done) {
+                fileHelper.deleteFile('data/2016::03.json');
+                fileHelper.deleteFile('data/2016::04.json');
+                fileHelper.deleteFile('data/houseConfig.json');
+                done();
+            });
+            before(function (done) {
+                messageTester.messageTester(testData.sriUtilFor0314, done);
+            });
+            before(function (done) {
+                messageTester.messageTester({
+                    "total_rent": "650",
+                    "num_of_tenants": "4"
+                }, 'admin/houseConfig', done);
+            });
+            before(function (done) {
+                messageTester.messageTester(testData.georgeUtilFor0315, done);
+            });
+
+            it('should return tenant total including own expenses', function (done) {
+                var expectedResponse = {
+                    year: '2016',
+                    month: '03',
+                    total: 177.5,
+                    util: {
+                        gas: 60,
+                        electricity: 0,
+                        household: 0
+                    }
+                };
+                messageTester.roomTotalTester({
+                    year: '2016',
+                    month: '03',
+                }, expectedResponse, 'perperson', done);
+            });
+
+        });
+    });
 });

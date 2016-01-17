@@ -10,9 +10,19 @@ var wrappedApp = function (req, res) {
 };
 var agent = request(wrappedApp);
 
-function messageTester(req, done) {
+function messageTester(req, suffix, done) {
+
+    if (arguments.length === 2) {
+        done = suffix;
+        suffix = undefined;
+    }
+    var url = '/';
+    if (suffix) {
+        url += suffix;
+    }
+    console.log(url);
     agent
-        .post('/')
+        .post(url)
         .send(req)
         .expect(200)
         .end(function (err) {

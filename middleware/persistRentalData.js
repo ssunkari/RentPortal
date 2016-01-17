@@ -95,16 +95,54 @@ function getTenantSummaryFromMonthlyDataFile(filename, ctx) {
     var household = _.sum(reducedArray, function (tenant) {
         return tenant.util.household.amount;
     });
-    // var fixedHouseRent = getFixedMonthlyHouseRentPerTenant()
-    //var getAllTenantsMonthlySummary = getAllTenantsMonthlySummary();
-    // var total = fixedHouseRent + 
-    // var additionalRoomExpenses =
     return {
         total: gas + electricity + household,
         gasTotal: gas,
         electricityTotal: electricity,
         householdTotal: household
     };
+}
+
+function perPersonMonthlySummary(ctx) {
+
+    var filename = 'data/' + ctx.year + '::' + ctx.month + '.json';
+    var response = {
+        year: ctx.year,
+        month: ctx.month
+    };
+
+    var content = fileHelper.readFileContentInJson(filename);
+    var util
+    var reducedArray = _.chain(content)
+        .map(function (dayData) {
+            return dayData;
+        })
+        .map(function (tenantData) {
+            return _.map(tenantData, 'util');
+        })
+        .flatten()
+        .value();
+    var totalUtilityExpensesForMonthForAlltenants = _.sum(reducedArray, function (util) {
+        return util.gas.amount + util.electricity.amount + util.household.amount;
+    });
+    var gas = _.sum(reducedArray, function (util) {
+        return util.gas.amount;
+    });
+    var electricity = _.sum(reducedArray, function (util) {
+        return util.electricity.amount;
+    });
+    var household = _.sum(reducedArray, function (util) {
+        return util.household.amount;
+    });
+    var fixedHouseRentPerTenant = getFixedMonthlyHouseRentPerTenant()
+    response.total = fixedHouseRentPerTenant + totalUtilityExpensesForMonthForAlltenants / 4;
+    response.util = {
+        gas: gas,
+        electricity: electricity,
+        household: household
+    };
+    console.log(JSON.stringify(response, null, 3));
+    return response;
 }
 
 function normalizeData(fileContents, data, day) {
@@ -135,5 +173,6 @@ module.exports = {
     saveData: saveData,
     getTenantMonthlySummary: getTenantMonthlySummary,
     getTenantYearlySummary: getTenantYearlySummary,
-    getAllTenantsMonthlySummary: getAllTenantsMonthlySummary
+    getAllTenantsMonthlySummary: getAllTenantsMonthlySummary,
+    perPersonMonthlySummary: perPersonMonthlySummary
 };
