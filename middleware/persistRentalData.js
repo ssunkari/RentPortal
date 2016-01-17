@@ -23,9 +23,9 @@ function getTenantMonthlySummary(ctx) {
     var getTenantSummary = getTenantSummaryFromMonthlyDataFile(filename, ctx);
     response.total = getTenantSummary.total;
     response.util = {
-        gas: getTenantSummary.gasTotal,
-        electricity: getTenantSummary.electricityTotal,
-        household: getTenantSummary.householdTotal
+        gas: getTenantSummary.gas,
+        electricity: getTenantSummary.electricity,
+        household: getTenantSummary.household
     };
     return response;
 }
@@ -68,9 +68,9 @@ function getTenantYearlySummary(ctx) {
     });
     responses.forEach(function (item) {
         response.total = response.total + item.total;
-        response.util.gas += item.gasTotal;
-        response.util.electricity += item.electricityTotal;
-        response.util.household += item.householdTotal;
+        response.util.gas += item.gas;
+        response.util.electricity += item.electricity;
+        response.util.household += item.household;
     })
 
     return response;
@@ -97,9 +97,9 @@ function getTenantSummaryFromMonthlyDataFile(filename, ctx) {
     });
     return {
         total: gas + electricity + household,
-        gasTotal: gas,
-        electricityTotal: electricity,
-        householdTotal: household
+        gas: gas,
+        electricity: electricity,
+        household: household
     };
 }
 
