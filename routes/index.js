@@ -10,7 +10,15 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/total/:year/:month/:tenant', function (req, res, next) {
-    res.json(persistRentalData.getTentantData(normalizedCtx(req.params)));
+    res.json(persistRentalData.getTenantMonthlySummary(normalizedCtx(req.params)));
+});
+
+router.get('/all/total/:year/:month', function (req, res, next) {
+    res.json(persistRentalData.getAllTenantsMonthlySummary(normalizedCtx(req.params)));
+});
+
+router.get('/total/:year/:tenant', function (req, res, next) {
+    res.json(persistRentalData.getTenantYearlySummary(normalizedCtx(req.params)));
 });
 
 /* POST home page. */
@@ -23,10 +31,12 @@ router.post('/', function (req, res, next) {
 });
 
 function normalizedCtx(ctx) {
+    var month = ctx.month || '';
+    var tenantName = ctx.tenant || '';
     return {
         year: ctx.year.replace(':', ''),
-        month: ctx.month.replace(':', ''),
-        tenantName: ctx.tenant.replace(':', '')
+        month: month.replace(':', ''),
+        tenantName: tenantName.replace(':', '')
     }
 }
 

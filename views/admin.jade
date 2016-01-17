@@ -1,0 +1,22 @@
+extends layout
+
+block content
+	h1=title
+	p Welcome to Admin Area
+	.container
+		.row
+			.span12
+				form(name="adminsettings", action='/admin/houseConfig', method="post")
+					fieldset 
+						.control-group
+							label.control-label Set Monthly Rent
+								.controls
+									input(type="text", name="total_rent")
+							label.control-label Num of tenants
+								.controls
+									input(type="text", name="num_of_tenants")
+						.control-group
+							.controls
+								input(type="submit", value="Submit")
+
+	p=message								

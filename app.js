@@ -26,9 +26,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //routes
 app.use('/', routes);
-app.use('/courses', routes);
 app.use('/users', users);
 app.use('/echo', require('./routes/echo.js'));
+app.use('/admin', require('./routes/admin.js'));
+app.use('/myView', require('./routes/myView.js'));
 app.use('/rent', require('./routes/rent.js'));
 app.use('/details', require('./routes/details.js'))
 

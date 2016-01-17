@@ -3,14 +3,21 @@ extends layout
 block content
 	h1=title
 	p Welcome to 35 Stanley Avenue Rent Portal #{title}
-	p Monthly Expenses
+	p View Tenant Expenses History
+	form(name="expensesSheet", action='/myview', method="post")
+		select(name='tenant_name')
+									each i in ["Srinu", "George", "Sam", "Vikram"]
+										option(value=i) #{i}
+		input(type="submit", value="View")
+
+	p Submit Monthly Expenses
 	.container
 		.row
 			.span12
 				form(name="expensesSheet", action='/', method="post")
 					fieldset 
 						.control-group
-							label.col-md-3.control-label(ng-show='Tenants', for='1') Tenants
+							label.col-md-3.control-label(ng-show='Tenants', for='1') Select Tenant
 								select(name='tenants')
 									each i in ["Srinu", "George", "Sam", "Vikram"]
 										option(value=i) #{i}
@@ -21,28 +28,27 @@ block content
 									input.input-xlarge#datepicker(type='date', name='selectedDay')
 									
 						.control-group 
-							label.control-label Select Tenant
-								.controls
-									table
-										thead
+							.controls
+								table
+									thead
+										tr
+											for day in ['Utility Type','Util']
+												th= day
+										tbody
+											//for object in ['Gas', 'Electricity', 'HouseHold']
 											tr
-												for day in ['Utility Type','Util']
-													th= day
-											tbody
-												//for object in ['Gas', 'Electricity', 'HouseHold']
-												tr
-													td=	'Gas'
-													td
-														input(type='text', name='gas')
-												tr
-													td=	'Electricity'
-													td
-														input(type='text', name='electricity')
-												tr
-													td=	'HouseHold'
-													td
-														input(type='text', name='household')
-					
+												td=	'Gas'
+												td
+													input(type='text', name='gas')
+											tr
+												td=	'Electricity'
+												td
+													input(type='text', name='electricity')
+											tr
+												td=	'HouseHold'
+												td
+													input(type='text', name='household')
+				
 						.control-group
 							.controls
 								input(type="submit", value="Submit")

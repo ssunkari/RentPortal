@@ -23,16 +23,36 @@ function messageTester(req, done) {
         });
 }
 
-function roomTotalTester(request, expectedResponse, done) {
+function roomTotalTester(request, expectedResponse, prefix, callback) {
+    var prefixUrl;
+    if (arguments.length === 3) {
+        callback = prefix;
+    } else {
+        prefixUrl = prefix;
+    }
+    var urlPrefixPath = '';
+    if (prefixUrl) {
+        urlPrefixPath += '/' + prefixUrl;
+    }
+    urlPrefixPath += '/total/' + request.year;
+    if (request.month) {
+        urlPrefixPath += '/' + request.month;
+    }
+    if (request.tenantName) {
+        urlPrefixPath += '/' + request.tenantName;
+    }
+
+    console.log(urlPrefixPath);
+    var domainUri = urlPrefixPath;
     agent
-        .get('/total/:' + request.year + '/:' + request.month + '/:' + request.tenantName)
+        .get(domainUri)
         .expect(200)
         .expect(expectedResponse)
         .end(function (err) {
             if (err) {
-                return done(err);
+                return callback(err);
             }
-            done();
+            callback();
         });
 }
 module.exports = {

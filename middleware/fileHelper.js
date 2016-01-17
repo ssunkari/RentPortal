@@ -17,7 +17,8 @@ function save(filename, contents) {
 };
 
 function deleteFile(filename) {
-    fs.unlinkSync(filename);
+    if (fs.existsSync(filename))
+        fs.unlinkSync(filename);
 };
 module.exports = {
     readFileContentInJson: readFileContentInJson,
