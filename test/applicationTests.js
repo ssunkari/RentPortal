@@ -5,10 +5,15 @@ var fileHelper = require('../middleware/fileHelper');
 describe('Get tenant monthly utility summary', function () {
     describe('with one day data setup', function () {
         before(function (done) {
-            fileHelper.deleteFile('data/2016::03.json');
+            fileHelper.deleteDirFiles('data', 'json');
             done();
         });
-
+        before(function (done) {
+            messageTester.messageTester({
+                "total_rent": "650",
+                "num_of_tenants": "4"
+            }, 'admin/houseConfig', done);
+        });
         before(function (done) {
             messageTester.messageTester(testData.sriUtilFor0314, done);
         });
@@ -18,7 +23,8 @@ describe('Get tenant monthly utility summary', function () {
                 tenantName: 'Srinu',
                 year: '2016',
                 month: '03',
-                total: 20,
+                total: 147.5,
+                runningTotal: 20,
                 util: {
                     gas: 20,
                     electricity: 0,
@@ -34,8 +40,14 @@ describe('Get tenant monthly utility summary', function () {
     });
     describe('with two day data setup', function () {
         before(function (done) {
-            fileHelper.deleteFile('data/2016::03.json');
+            fileHelper.deleteDirFiles('data', 'json');
             done();
+        });
+        before(function (done) {
+            messageTester.messageTester({
+                "total_rent": "650",
+                "num_of_tenants": "4"
+            }, 'admin/houseConfig', done);
         });
         before(function (done) {
             messageTester.messageTester(testData.sriUtilFor0314, done);
@@ -51,7 +63,8 @@ describe('Get tenant monthly utility summary', function () {
                 tenantName: 'Srinu',
                 year: '2016',
                 month: '03',
-                total: 60,
+                total: 117.5,
+                runningTotal: 60,
                 util: {
                     gas: 20,
                     electricity: 40,
@@ -68,8 +81,14 @@ describe('Get tenant monthly utility summary', function () {
 
     describe('Get particular tenant total', function () {
         before(function (done) {
-            fileHelper.deleteFile('data/2016::03.json');
+            fileHelper.deleteDirFiles('data', 'json');
             done();
+        });
+        before(function (done) {
+            messageTester.messageTester({
+                "total_rent": "650",
+                "num_of_tenants": "4"
+            }, 'admin/houseConfig', done);
         });
         describe('Given data for two tenants', function () {
 
@@ -87,7 +106,8 @@ describe('Get tenant monthly utility summary', function () {
                     tenantName: 'George',
                     year: '2016',
                     month: '03',
-                    total: 40,
+                    total: 142.5,
+                    runningTotal: 40,
                     util: {
                         gas: 40,
                         electricity: 0,
@@ -107,9 +127,14 @@ describe('Get tenant monthly utility summary', function () {
 describe('Get tenant yearly utility summary', function () {
     describe('with two months data', function () {
         before(function (done) {
-            fileHelper.deleteFile('data/2016::03.json');
-            fileHelper.deleteFile('data/2016::04.json');
+            fileHelper.deleteDirFiles('data', 'json');
             done();
+        });
+        before(function (done) {
+            messageTester.messageTester({
+                "total_rent": "650",
+                "num_of_tenants": "4"
+            }, 'admin/houseConfig', done);
         });
         before(function (done) {
             messageTester.messageTester(testData.sriUtilFor0314, done);
@@ -122,7 +147,8 @@ describe('Get tenant yearly utility summary', function () {
             var expectedResponse = {
                 tenantName: 'Srinu',
                 year: '2016',
-                total: 120,
+                runningTotal: 120,
+                total: 1830,
                 util: {
                     gas: 120,
                     electricity: 0,
@@ -139,12 +165,17 @@ describe('Get tenant yearly utility summary', function () {
 
 });
 
-describe('Get all tenants montly utility summary', function () {
+describe('Completele breakdown summary of a tenant monthly expenses', function () {
     describe('with two tenants data', function () {
         before(function (done) {
-            fileHelper.deleteFile('data/2016::03.json');
-            fileHelper.deleteFile('data/2016::04.json');
+            fileHelper.deleteDirFiles('data', 'json');
             done();
+        });
+        before(function (done) {
+            messageTester.messageTester({
+                "total_rent": "650",
+                "num_of_tenants": "4"
+            }, 'admin/houseConfig', done);
         });
         before(function (done) {
             messageTester.messageTester(testData.sriUtilFor0314, done);
@@ -158,7 +189,8 @@ describe('Get all tenants montly utility summary', function () {
                 tenantName: 'Srinu',
                 year: '2016',
                 month: '03',
-                total: 20,
+                total: 157.5,
+                runningTotal: 20,
                 util: {
                     gas: 20,
                     electricity: 0,
@@ -168,7 +200,8 @@ describe('Get all tenants montly utility summary', function () {
                 tenantName: 'George',
                 year: '2016',
                 month: '03',
-                total: 40,
+                runningTotal: 40,
+                total: 137.5,
                 util: {
                     gas: 40,
                     electricity: 0,
@@ -178,7 +211,8 @@ describe('Get all tenants montly utility summary', function () {
                 tenantName: 'Sam',
                 year: '2016',
                 month: '03',
-                total: 0,
+                total: 177.5,
+                runningTotal: 0,
                 util: {
                     gas: 0,
                     electricity: 0,
@@ -188,7 +222,8 @@ describe('Get all tenants montly utility summary', function () {
                 tenantName: 'Vikram',
                 year: '2016',
                 month: '03',
-                total: 0,
+                total: 177.5,
+                runningTotal: 0,
                 util: {
                     gas: 0,
                     electricity: 0,
@@ -206,13 +241,8 @@ describe('Get all tenants montly utility summary', function () {
     describe('Get tenant monthly expenditure summary', function () {
         describe('with two tenants data', function () {
             before(function (done) {
-                fileHelper.deleteFile('data/2016::03.json');
-                fileHelper.deleteFile('data/2016::04.json');
-                fileHelper.deleteFile('data/houseConfig.json');
+                fileHelper.deleteDirFiles('data', 'json');
                 done();
-            });
-            before(function (done) {
-                messageTester.messageTester(testData.sriUtilFor0314, done);
             });
             before(function (done) {
                 messageTester.messageTester({
@@ -221,11 +251,14 @@ describe('Get all tenants montly utility summary', function () {
                 }, 'admin/houseConfig', done);
             });
             before(function (done) {
+                messageTester.messageTester(testData.sriUtilFor0314, done);
+            });
+            before(function (done) {
                 messageTester.messageTester(testData.georgeUtilFor0315, done);
             });
 
             it('should return tenant total including own expenses', function (done) {
-                var expectedResponse = {
+                var expected = {
                     year: '2016',
                     month: '03',
                     total: 177.5,
@@ -238,7 +271,7 @@ describe('Get all tenants montly utility summary', function () {
                 messageTester.roomTotalTester({
                     year: '2016',
                     month: '03',
-                }, expectedResponse, 'perperson', done);
+                }, expected, 'perperson', done);
             });
 
         });

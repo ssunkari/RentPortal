@@ -1,6 +1,7 @@
 var moment = require('moment');
 var fileHelper = require('./fileHelper');
 var _ = require('lodash');
+var logger = require('./logger');
 
 function saveData(data) {
     var selectedDate = moment(data.selectedDay, 'YYYYMMDD');
@@ -22,6 +23,7 @@ function getTenantMonthlySummary(ctx) {
 
     var getTenantSummary = getTenantSummaryFromMonthlyDataFile(filename, ctx);
     response.total = getTenantSummary.total;
+    response.runningTotal = getTenantSummary.runningTotal;
     response.util = {
         gas: getTenantSummary.gas,
         electricity: getTenantSummary.electricity,
@@ -53,6 +55,7 @@ function getTenantYearlySummary(ctx) {
         tenantName: ctx.tenantName,
         year: ctx.year,
         total: 0,
+        runningTotal: 0,
         util: {
             gas: 0,
             electricity: 0,
@@ -66,8 +69,10 @@ function getTenantYearlySummary(ctx) {
         var filename = 'data/' + ctx.year + '::' + month + '.json';
         responses.push(getTenantSummaryFromMonthlyDataFile(filename, ctx));
     });
+    logger.deepLog(responses);
     responses.forEach(function (item) {
-        response.total = response.total + item.total;
+        response.total += item.total;
+        response.runningTotal += item.runningTotal;
         response.util.gas += item.gas;
         response.util.electricity += item.electricity;
         response.util.household += item.household;
@@ -95,8 +100,12 @@ function getTenantSummaryFromMonthlyDataFile(filename, ctx) {
     var household = _.sum(reducedArray, function (tenant) {
         return tenant.util.household.amount;
     });
+    var runningTotal = gas + electricity + household;
+
+    var total = perPersonMonthlySummary(ctx).total - runningTotal;
     return {
-        total: gas + electricity + household,
+        total: total,
+        runningTotal: gas + electricity + household,
         gas: gas,
         electricity: electricity,
         household: household
@@ -141,7 +150,6 @@ function perPersonMonthlySummary(ctx) {
         electricity: electricity,
         household: household
     };
-    console.log(JSON.stringify(response, null, 3));
     return response;
 }
 

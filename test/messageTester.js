@@ -59,6 +59,7 @@ function roomTotalTester(request, expectedResponse, prefix, callback) {
         .expect(200)
         .expect(expectedResponse)
         .end(function (err) {
+
             if (err) {
                 return callback(err);
             }
