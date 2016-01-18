@@ -63,71 +63,6 @@ module.exports = function (grunt) {
                 stdout: true,
                 stderr: true,
                 failOnError: true
-            },
-            cloneArtefacts: {
-                command: 'git clone <%= artefactGitUrl %> <%= artefactPullLocation %>'
-            },
-            commitArtefact: {
-                command: 'git add -A && git commit -m \'v<%= pkg.version %><%= artefactTag %>\'',
-                options: {
-                    execOptions: {
-                        cwd: '<%= artefactPullLocation %>'
-                    }
-                }
-            },
-            tagArtefact: {
-                command: 'git tag -a \'<%= artefactTag %>\' -m \'Automated publish.\'',
-                options: {
-                    execOptions: {
-                        cwd: '<%= artefactPullLocation %>'
-                    }
-                }
-            },
-            pushArtefact: {
-                command: 'git push origin master && git push --tags',
-                options: {
-                    execOptions: {
-                        cwd: '<%= artefactPullLocation %>'
-                    }
-                }
-            },
-            clearGit: {
-                command: 'rm <%= artefactPullLocation %> -rf'
-            },
-            clearArtefacts: {
-                command: 'rm * -rf',
-                options: {
-                    execOptions: {
-                        cwd: '<%= artefactPullLocation %>'
-                    }
-                }
-            },
-            copyApplication: {
-                command: [
-                    'cp -r <%= rateserviceDist %>/package.json <%= artefactPullLocation %>',
-                    'cp -r <%= rateserviceDist %>/src/* <%= artefactPullLocation %>',
-                    'cp -r <%= rateserviceDist %>./newrelic.js <%= artefactPullLocation %>',
-                    'echo \'<%= artefactTag %>\' > <%= artefactPullLocation %>/version.txt'
-                ].join('&&'),
-                options: {
-                    stdout: true,
-                    stderr: true,
-                    failOnError: true
-                }
-            },
-            prodmodules: {
-                command: 'npm install --production',
-                options: {
-                    execOptions: {
-                        cwd: '<%= artefactPullLocation %>'
-                    }
-                }
-            },
-            cleanGitIgnores: {
-                command: 'find <%= artefactPullLocation %> -name \'.gitignore\' -exec rm {} \\;'
-            },
-            tar: {
-                command: 'tar -czf rateservice.<%= rateserviceVersion %>.tar.gz ./<%= rateserviceDist %>/*'
             }
         }
     });
@@ -146,15 +81,4 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', ['jshint', 'jscs', 'test']);
 
-    grunt.registerTask('publish', [
-        'shell:clearGit',
-        'shell:cloneArtefacts',
-        'shell:clearArtefacts',
-        'shell:copyApplication',
-        'shell:prodmodules',
-        'shell:cleanGitIgnores',
-        'shell:commitArtefact',
-        'shell:tagArtefact',
-        'shell:pushArtefact'
-    ]);
 };

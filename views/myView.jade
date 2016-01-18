@@ -3,3 +3,7 @@ extends layout
 block content
 	h1=title
 	h3 Welcome to Tenant #{tenantName}
+
+	p Monthly expenses for current year #{currentMonthSummary.year} and month #{currentMonthSummary.month}
+	p This is what you have to pay so far #{currentMonthSummary.total}
+	p highcharts.chart('container', { /*Highcharts options*/ });
