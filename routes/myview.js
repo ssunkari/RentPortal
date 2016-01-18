@@ -13,7 +13,7 @@ router.post('/', function (req, res, next) {
     });
     console.dir(currentMonthSummary);
 
-    res.render('myView', {
+    res.render('myview', {
         title: 'My View',
         tenantName: req.body.tenant_name,
         currentMonthSummary: currentMonthSummary,
