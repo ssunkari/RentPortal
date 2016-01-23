@@ -19,7 +19,7 @@ block content
 						.control-group
 							label.col-md-3.control-label(ng-show='Tenants', for='1') Select Tenant
 								select(name='tenants')
-									each i in ["Srinu", "George", "Sam", "Vikram"]
+									each i in ["Srinu", "George", "Sam", "Vikram", ""]
 										option(value=i) #{i}
 						.control-group 
 							label.control-label 
@@ -52,8 +52,10 @@ block content
 						.control-group
 							.controls
 								input(type="submit", value="Submit")
-
-	p=message								
+								label.error-label
+									for error in errors
+										p * #{error}
+								p=message								
 
 							//- .control-group 
 						//- 	label.control-label Select Tenant
