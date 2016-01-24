@@ -11,19 +11,26 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/total/:year/:month/:tenant', function (req, res, next) {
-    res.json(persistRentalData.getTenantMonthlySummary(normalizedCtx(req.params)));
+    persistRentalData.getTenantMonthlySummary(normalizedCtx(req.params)).then(function (data) {
+        return res.json(data);
+    });
 });
 
 router.get('/all/total/:year/:month', function (req, res, next) {
-    res.json(persistRentalData.getAllTenantsMonthlySummary(normalizedCtx(req.params)));
+    persistRentalData.getAllTenantsMonthlySummary(normalizedCtx(req.params)).then(function (data) {
+        return res.json(data);
+    });
 });
-
 router.get('/perperson/total/:year/:month', function (req, res, next) {
-    res.json(persistRentalData.perPersonMonthlySummary(normalizedCtx(req.params)));
+    persistRentalData.perPersonMonthlySummary(normalizedCtx(req.params)).then(function (data) {
+        return res.json(data);
+    });
 });
 
 router.get('/total/:year/:tenant', function (req, res, next) {
-    res.json(persistRentalData.getTenantYearlySummary(normalizedCtx(req.params)));
+    persistRentalData.getTenantYearlySummary(normalizedCtx(req.params)).then(function (data) {
+        return res.json(data);
+    });
 });
 
 function validate(formFields) {

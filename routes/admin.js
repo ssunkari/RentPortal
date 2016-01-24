@@ -1,19 +1,27 @@
 var express = require('express');
 var router = express.Router();
-var fileHelper = require('../middleware/fileHelper');
+var persistRentalData = require('../middleware/persistRentalData');
+
 router.get('/', function (req, res, next) {
     res.render('admin', {
         title: 'Express'
     });
 });
 router.post('/houseConfig', function (req, res, next) {
-    console.log(req.body);
-    fileHelper.save('data/houseConfig.json', JSON.stringify(req.body));
-
+    var success = '';
+    persistRentalData.save('houseConfig', JSON.stringify(req.body)).then(
+        success = 'Successfully updated the configuration'
+    );
     res.render('admin', {
         title: 'Express',
-        message: 'Successfully updated the configuration'
+        message: success
     });
+});
+
+router.get('/houseConfig', function (req, res, next) {
+    persistRentalData.getHouseConfig('houseConfig').then(function (data) {
+        return res.json(data);
+    })
 });
 
 module.exports = router;

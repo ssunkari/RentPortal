@@ -29,7 +29,24 @@ function messageTester(req, suffix, done) {
             if (err) {
                 return done(err);
             }
-            done();
+            if (done) {
+                done();
+            }
+        });
+}
+
+function reqPostTester(url, expectedResponse, callback) {
+    agent
+        .get(url)
+        .expect(200)
+        .expect(expectedResponse)
+        .end(function (err) {
+            console.log('utl', url);
+
+            if (err) {
+                return callback(err);
+            }
+            callback();
         });
 }
 
@@ -53,20 +70,11 @@ function roomTotalTester(request, expectedResponse, prefix, callback) {
     }
 
     console.log(urlPrefixPath);
-    var domainUri = urlPrefixPath;
-    agent
-        .get(domainUri)
-        .expect(200)
-        .expect(expectedResponse)
-        .end(function (err) {
+    reqPostTester(urlPrefixPath, expectedResponse, callback);
 
-            if (err) {
-                return callback(err);
-            }
-            callback();
-        });
 }
 module.exports = {
     messageTester: messageTester,
-    roomTotalTester: roomTotalTester
+    roomTotalTester: roomTotalTester,
+    reqPostTester: reqPostTester
 };
