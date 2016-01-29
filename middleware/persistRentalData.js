@@ -2,19 +2,27 @@ var moment = require('moment');
 var fileHelper = require('./fileHelper');
 var _ = require('lodash');
 var logger = require('./logger');
-var redisDocStore = require('../redisDocStore');
+var redisClient = require('../redisClient');
 var promise = require('bluebird');
-var redis = require("redis");
-promise.promisifyAll(redis.RedisClient.prototype);
-promise.promisifyAll(redis.Multi.prototype);
-var redisClient = redis.createClient(10423, 'pub-redis-10423.us-east-1-3.1.ec2.garantiadata.com', {
-    no_ready_check: true
-});
-redisClient.auth('mlg1plTOvmQrxOft', function (err) {
-    if (err) {
-        throw err;
-    }
-});
+
+function save(key, value) {
+    return promise.resolve(redisClient.set(key, value));
+}
+
+function saveData(formData) {
+    console.log('Started to Save to Redis Db');
+    var selectedDate = moment(formData.selectedDay, 'YYYYMMDD');
+    var month = selectedDate.format('MM');
+    var year = selectedDate.format('YYYY');
+    var day = selectedDate.format('DD');
+    var key = year + '::' + month;
+    redisClient.getAsync(key).then(function (docFromStore) {
+        return normaliseData(docFromStore, formData, day);
+    }).then(function (docToStore) {
+        redisClient.set(key, docToStore);
+    });
+    console.log('Saved to Redis Db Successfully');
+};
 
 function normaliseData(dataFromDocStore, formData, selectedDay) {
     console.log('----normalising Data: initital data fetch from redis----');
@@ -47,25 +55,6 @@ function normaliseData(dataFromDocStore, formData, selectedDay) {
 
 }
 
-function save(key, value) {
-    return promise.resolve(redisClient.set(key, value));
-}
-
-function saveData(formData) {
-    console.log('Started to Save to Redis Db');
-    var selectedDate = moment(formData.selectedDay, 'YYYYMMDD');
-    var month = selectedDate.format('MM');
-    var year = selectedDate.format('YYYY');
-    var day = selectedDate.format('DD');
-    var key = year + '::' + month;
-    redisClient.getAsync(key).then(function (docFromStore) {
-        return normaliseData(docFromStore, formData, day);
-    }).then(function (docToStore) {
-        redisClient.set(key, docToStore);
-    });
-    console.log('Saved to Redis Db Successfully');
-};
-
 function getTenantMonthlySummary(ctx) {
     var key = ctx.year + '::' + ctx.month;
     var response = {
@@ -90,22 +79,19 @@ function getTenantMonthlySummary(ctx) {
 }
 
 function getAllTenantsMonthlySummary(ctx) {
-
     var listOfTenants = ["Srinu", "George", "Sam", "Vikram"];
-    var responses = [];
-    listOfTenants.forEach(function (tenant) {
+    return promise.all(listOfTenants.map(function (tenant) {
         ctx.tenantName = tenant;
-        responses.push(getTenantMonthlySummary(ctx));
-    });
-
-    return responses;
+        return getTenantMonthlySummary(ctx);
+    }));
 
 }
 
 function getHouseConfig(key) {
-    return redisClient.getAsync(key).then(function (data) {
-        return JSON.parse(data);
-    });
+    return redisClient
+        .getAsync(key).then(function (data) {
+            return JSON.parse(data);
+        });
 }
 
 function getFixedMonthlyHouseRentPerTenant() {
@@ -115,7 +101,7 @@ function getFixedMonthlyHouseRentPerTenant() {
 }
 
 function getTenantYearlySummary(ctx) {
-    var response = {
+    var totals = {
         tenantName: ctx.tenantName,
         year: ctx.year,
         total: 0,
@@ -125,39 +111,27 @@ function getTenantYearlySummary(ctx) {
             electricity: 0,
             household: 0
         }
-
     };
+
     var monthsInYear = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
-    var responses = [];
-    monthsInYear.forEach(function (month) {
+    var responses = monthsInYear.map(function (month) {
         var key = ctx.year + '::' + month;
-        responses.push(getTenantSummaryFromMonthlyDataFile(key, ctx));
+        return getTenantSummaryFromMonthlyDataFile(key, ctx);
     });
-    return promise.all(responses, function (item) {
-        _.forEach(item, function (monthly) {
+
+    return promise.all(responses).then(function (items) {
+        return items.reduce(function addToTotals(totals, monthly) {
             console.log('Promises Loop');
             console.objectLog(monthly);
-            response.total += monthly.total;
-            response.runningTotal += monthly.runningTotal;
-            response.util.gas += monthly.gas;
-            response.util.electricity += monthly.electricity;
-            response.util.household += monthly.household;
-        });
-        return response;
+            totals.total += monthly.total;
+            totals.runningTotal += monthly.runningTotal;
+            totals.util.gas += monthly.gas;
+            totals.util.electricity += monthly.electricity;
+            totals.util.household += monthly.household;
+            return totals;
+        }, totals);
 
-    }).then(function (response) {
-        return response;
     });
-    return promise.resolve(response);
-    // responses.forEach(function (item) {
-    //     response.total += item.total;
-    //     response.runningTotal += item.runningTotal;
-    //     response.util.gas += item.gas;
-    //     response.util.electricity += item.electricity;
-    //     response.util.household += item.household;
-    // });
-
-    // return response;
 }
 
 function getTenantSummaryFromMonthlyDataFile(key, ctx) {
@@ -167,7 +141,7 @@ function getTenantSummaryFromMonthlyDataFile(key, ctx) {
             return JSON.parse(docFromStore);
         }).then(function (docFromStoreInJson) {
             console.log('Raw Data From Store ================');
-            console.objectLog(docFromStoreInJson);
+            // console.objectLog(docFromStoreInJson);
             return _.filter(docFromStoreInJson, ctx.tenantName).map(function (tenantData) {
                 return tenantData[ctx.tenantName];
 
@@ -206,18 +180,6 @@ function getTenantSummaryFromMonthlyDataFile(key, ctx) {
                 household: utils.household
             };
         });
-
-    // var total = perPersonMonthlySummary(ctx).then(function (data) {
-    //     return data.total - runningTotal
-    // });
-    // return {
-    //     total: total,
-    //     runningTotal: gas + electricity + household,
-    //     gas: gas,
-    //     electricity: electricity,
-    //     household: household
-    // };
-    // });
 }
 
 function perPersonMonthlySummary(ctx) {
@@ -270,77 +232,6 @@ function perPersonMonthlySummary(ctx) {
         values[0].total = values[0].total + values[1];
         return values[0];
     })
-
-    // var content = redisClient.get(key, function (err, reply) {
-    //     if (err) {
-    //         throw err;
-    //     }
-    //     return reply.toString();
-    // });
-    // console.log('-=========----');
-    // console.objectLog(content);
-    // var reducedArray = _.chain(content)
-    //     .map(function (dayData) {
-    //         return dayData;
-    //     })
-    //     .map(function (tenantData) {
-    //         return _.map(tenantData, 'util');
-    //     })
-    //     .flatten()
-    //     .value();
-    // var totalUtilityExpensesForMonthForAlltenants = _.sum(reducedArray, function (util) {
-    //     return util.gas.amount + util.electricity.amount + util.household.amount;
-    // });
-    // var gas = _.sum(reducedArray, function (util) {
-    //     return util.gas.amount;
-    // });
-    // var electricity = _.sum(reducedArray, function (util) {
-    //     return util.electricity.amount;
-    // });
-    // var household = _.sum(reducedArray, function (util) {
-    //     return util.household.amount;
-    // });
-    // var fixedHouseRentPerTenant = getFixedMonthlyHouseRentPerTenant()
-    // response.total = fixedHouseRentPerTenant + totalUtilityExpensesForMonthForAlltenants / 4;
-    // response.util = {
-    //     gas: gas,
-    //     electricity: electricity,
-    //     household: household
-    // };
-    // return response;
-}
-
-function normalizeData(fileContents, data, day) {
-    if (!fileContents) {
-        fileContents = {};
-    }
-    filecontents = JSON.parse(fileContents);
-    if (!fileContents[day]) {
-        console.log('filr', fileContents[day]);
-        fileContents[day] = {};
-        console.error('filr 2', day);
-    }
-    console.log('filecontents 1');
-    console.objectLog(fileContents);
-    console.log('day is', day);
-
-    fileContents[day][data.tenants] = {
-        util: {
-            gas: {
-                amount: data.gas
-            },
-            electricity: {
-                amount: data.electricity
-            },
-            household: {
-                amount: data.household
-            }
-        }
-    }
-    console.log('filecontents ');
-    console.objectLog(fileContents);
-    return fileContents;
-
 }
 
 module.exports = {

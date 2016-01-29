@@ -55,28 +55,25 @@ describe('Get tenant monthly utility summary', function () {
         }, expectedResponse, done);
     });
 });
-describe.only('with two day data setup', function () {
+describe.skip('with two day data setup', function () {
     this.timeout(6000);
     before(function (done) {
         redisClient.delWildcard('*::*', done);
     });
     before(function (done) {
         messageTester.messageTester({
-            "total_rent": "650",
-            "num_of_tenants": "4"
-        }, 'admin/houseConfig', done);
-    });
-    before(function (done) {
-        messageTester.messageTester(testData.sriUtilFor0314);
-        sleep(2);
-        messageTester.messageTester(testData.sriUtilFor0315);
-        done();
+                "total_rent": "650",
+                "num_of_tenants": "4"
+            }, 'admin/houseConfig', function () {
+                messageTester.messageTester(testData.sriUtilFor0314, function () {
+                    messageTester.messageTester(testData.sriUtilFor0315);
+                    done();
+                });
 
-    });
-    before(function (done) {
-        done();
-    });
+            }
 
+        );
+    });
     it('should return tenant summary', function (done) {
         sleep(3);
         var expectedResponse = {
