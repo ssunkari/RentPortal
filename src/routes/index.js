@@ -3,31 +3,31 @@ var router = express.Router();
 var persistRentalData = require('../middleware/persistRentalData');
 var errors = [];
 /* GET home page. */
-router.get('/', function (req, res, next) {
+router.get('/', function (req, res) {
     res.render('index', {
         title: 'Rent Portal',
         errors: []
     });
 });
 
-router.get('/total/:year/:month/:tenant', function (req, res, next) {
+router.get('/total/:year/:month/:tenant', function (req, res) {
     persistRentalData.getTenantMonthlySummary(normalizedCtx(req.params)).then(function (data) {
         return res.json(data);
     });
 });
 
-router.get('/all/total/:year/:month', function (req, res, next) {
+router.get('/all/total/:year/:month', function (req, res) {
     persistRentalData.getAllTenantsMonthlySummary(normalizedCtx(req.params)).then(function (data) {
         return res.json(data);
     });
 });
-router.get('/perperson/total/:year/:month', function (req, res, next) {
+router.get('/perperson/total/:year/:month', function (req, res) {
     persistRentalData.perPersonMonthlySummary(normalizedCtx(req.params)).then(function (data) {
         return res.json(data);
     });
 });
 
-router.get('/total/:year/:tenant', function (req, res, next) {
+router.get('/total/:year/:tenant', function (req, res) {
     persistRentalData.getTenantYearlySummary(normalizedCtx(req.params)).then(function (data) {
         return res.json(data);
     });
@@ -57,7 +57,7 @@ function validate(formFields) {
 }
 
 /* POST home page. */
-router.post('/', function (req, res, next) {
+router.post('/', function (req, res) {
     errors.clear();
     validate(req.body);
     if (errors.length) {
@@ -68,11 +68,12 @@ router.post('/', function (req, res, next) {
     } else {
         //  var errors = req.validationErrors();
 
-        persistRentalData.saveData(req.body);
-        res.render('index', {
-            title: 'Rent Portal',
-            message: 'Successfully logged the Data',
-            errors: errors
+        persistRentalData.saveData(req.body).then(function () {
+            res.render('index', {
+                title: 'Rent Portal',
+                message: 'Successfully logged the Data',
+                errors: errors
+            });
         });
     }
 });
@@ -84,7 +85,7 @@ function normalizedCtx(ctx) {
         year: ctx.year.replace(':', ''),
         month: month.replace(':', ''),
         tenantName: tenantName.replace(':', '')
-    }
+    };
 }
 
 module.exports = router;

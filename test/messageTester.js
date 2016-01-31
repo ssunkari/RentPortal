@@ -1,4 +1,4 @@
-var app = require('../app');
+var app = require('../src/app');
 var request = require('supertest');
 var wrappedApp = function (req, res) {
     var domain = require('domain').create();
@@ -20,7 +20,6 @@ function messageTester(req, suffix, done) {
     if (suffix) {
         url += suffix;
     }
-    console.log(url);
     agent
         .post(url)
         .send(req)
