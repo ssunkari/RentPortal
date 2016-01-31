@@ -3,21 +3,22 @@ var router = express.Router();
 var moment = require('moment');
 var persistRentalData = require('../middleware/persistRentalData');
 
-router.get('/', function (req, res) {
+router.post('/', function (req, res) {
     var date = moment();
-    console.dir(req.body);
-    var currentMonthSummary = persistRentalData.getTenantMonthlySummary({
+    persistRentalData.getTenantMonthlySummary({
         tenantName: req.body.tenant_name,
         year: date.format('YYYY'),
         month: date.format('MM')
-    });
-    console.dir(currentMonthSummary);
+    }).then(function (monthlySummary) {
+        console.dir(monthlySummary);
 
-    res.render('myview', {
-        title: 'My View',
-        tenantName: req.body.tenant_name,
-        currentMonthSummary: currentMonthSummary
+        res.render('myview', {
+            title: 'My View',
+            tenantName: req.body.tenant_name,
+            currentMonthSummary: monthlySummary
+        });
     });
+
 });
 
 module.exports = router;
