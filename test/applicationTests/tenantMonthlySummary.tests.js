@@ -41,7 +41,7 @@ describe('Tenant monthly summary', function () {
             }, expectedResponse, done);
         });
     });
-    describe('with two day data setup', function () {
+    describe('with two day monthly data setup', function () {
         beforeEach(function (done) {
             messageTester.messageTester(testData.sriUtilFor0314, function () {
                 messageTester.messageTester(testData.sriUtilFor0315, done);
@@ -94,6 +94,39 @@ describe('Tenant monthly summary', function () {
                 year: '2016',
                 month: '03',
                 tenantName: 'George'
+            }, expectedResponse, done);
+        });
+    });
+    describe('given multi tenant multi day one month data', function () {
+        beforeEach(function (done) {
+            messageTester.messageTester(testData.sriUtilFor0315, done);
+
+        });
+        beforeEach(function (done) {
+            messageTester.messageTester(testData.sriUtilFor0314, done);
+
+        });
+        beforeEach(function (done) {
+            messageTester.messageTester(testData.georgeUtilFor0315, done);
+        });
+
+        it('should return selected tenant total', function (done) {
+            var expectedResponse = {
+                tenantName: 'Srinu',
+                year: '2016',
+                month: '03',
+                total: 127.5,
+                runningTotal: 60,
+                util: {
+                    gas: 20,
+                    electricity: 40,
+                    household: 0
+                }
+            };
+            messageTester.roomTotalTester({
+                year: '2016',
+                month: '03',
+                tenantName: 'Srinu'
             }, expectedResponse, done);
         });
     });

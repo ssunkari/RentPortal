@@ -33,6 +33,12 @@ router.get('/total/:year/:tenant', function (req, res) {
     });
 });
 
+router.get('/util/total/:year', function (req, res) {
+    persistRentalData.getUtilYearlySummary(normalizedCtx(req.params)).then(function (data) {
+        return res.json(data);
+    });
+});
+
 function validate(formFields) {
     if (!formFields.tenants) {
         errors.push('Select tenant from the drop down list');

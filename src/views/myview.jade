@@ -7,11 +7,14 @@ block content
 
   p Monthly expenses for current year #{currentMonthSummary.year} and month #{currentMonthSummary.month}
   p This is what you have to pay so far #{currentMonthSummary.total}
-  #container(style='max-width: 500px; height: 400px; margin: 0 left')
+  #yearlyCurTenant(style='max-width: 500px; height: 400px; margin: 0 left')
+  #util(style='max-width: 500px; height: 400px; margin: 0 left')
   #container1(style='max-width: 500px; height: 400px; margin: 0 right')
+  
   script.
      $(function () {
-       $('#container').highcharts({
+       $.get( "/total/2016/Srinu", function(data) {
+       $('#yearlyCurTenant').highcharts({
            title: {
                text: 'Your yearly rent summary',
                x: -20 //center
@@ -35,7 +38,7 @@ block content
                }]
            },
            tooltip: {
-               valueSuffix: '°C'
+               valueSuffix: 'GBP'
            },
            legend: {
                layout: 'vertical',
@@ -43,65 +46,45 @@ block content
                verticalAlign: 'middle',
                borderWidth: 0
            },
-           series: [{
-               name: 'Srinu',
-               data: [200, 200, 160, 180, 190, 240, 150, 120, 100, 190, 100, 168]
-           }, {
-               name: 'Sam',
-               data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
-           }, {
-               name: 'Vikran',
-               data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
-           }, {
-               name: 'George',
-               data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
-           }]
+           series: data
        });
-       $('#container1').highcharts({
+       });
+
+       $.get( "/util/total/2016", function(data) {
+       $('#util').highcharts({
+       title: {
+           text: 'Yearly util Summary',
+           x: -20 //center
+       },
+       subtitle: {
+           text: 'Source: RentPortal.herokuapp.com',
+           x: -20
+       },
+       xAxis: {
+           categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+               'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+       },
+       yAxis: {
            title: {
-               text: 'Money spent on utilities',
-               x: -20 //center
+               text: 'Amount (GBP)'
            },
-           subtitle: {
-               text: 'Source: RentPortal.herokuapp.com',
-               x: -20
-           },
-           xAxis: {
-               categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-           },
-           yAxis: {
-               title: {
-                   text: 'Amount (GBP)'
-               },
-               plotLines: [{
-                   value: 0,
-                   width: 1,
-                   color: '#808080'
-               }]
-           },
-           tooltip: {
-               valueSuffix: '°C'
-           },
-           legend: {
-               layout: 'vertical',
-               align: 'right',
-               verticalAlign: 'middle',
-               borderWidth: 0
-           },
-           series: [{
-               name: 'Gas',
-               data: [200, 200, 160, 180, 190, 240, 150, 120, 100, 190, 100, 168]
-           }, {
-               name: 'Electricity',
-               data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
-           }, {
-               name: 'Internet',
-               data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
-           }, {
-               name: 'HouseHold',
-               data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+           plotLines: [{
+               value: 0,
+               width: 1,
+               color: '#808080'
            }]
+       },
+       tooltip: {
+           valueSuffix: 'GBP'
+       },
+       legend: {
+           layout: 'vertical',
+           align: 'right',
+           verticalAlign: 'middle',
+           borderWidth: 0
+       },
+       series: data
+       });
        });
      });    
   

@@ -18,24 +18,30 @@ describe('yearly summary', function () {
         }, 'admin/houseConfig', done);
     });
     beforeEach(function (done) {
-        messageTester.messageTester(testData.sriUtilFor0314, function () {
-            messageTester.messageTester(testData.sriUtilFor0414, done);
-        });
+        messageTester.messageTester(testData.sriUtilFor0314, done);
+    });
+    beforeEach(function (done) {
+        messageTester.messageTester(testData.sriUtilFor0414, done);
     });
     describe('particular tenant', function () {
         describe('with two months data', function () {
             it('should return tenant yearly breakdown', function (done) {
-                var expectedResponse = {
-                    tenantName: 'Srinu',
-                    year: '2016',
-                    runningTotal: 120,
-                    total: 1830,
-                    util: {
-                        gas: 120,
-                        electricity: 0,
-                        household: 0
-                    }
-                };
+                var expectedResponse = [{
+                    name: 'Srinu',
+                    data: [162.5,
+                        162.5,
+                        167.5,
+                        187.5,
+                        162.5,
+                        162.5,
+                        162.5,
+                        162.5,
+                        162.5,
+                        162.5,
+                        162.5,
+                        162.5
+                    ]
+                }];
                 messageTester.roomTotalTester({
                     year: '2016',
                     tenantName: 'Srinu'

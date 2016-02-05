@@ -9,7 +9,6 @@ module.exports = {
     },
     getByWildcardKey: function (wildcardKey) {
         return Promise.all(redisClient.keysAsync(wildcardKey).then(function (keys) {
-            console.log('Keys retrieved', keys);
             return keys.map(function (key) {
                 return {
                     key: key,

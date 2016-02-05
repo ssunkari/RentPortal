@@ -29,14 +29,13 @@ function saveData(formData) {
 
 function getTenantMonthlySummary(ctx) {
     var key = ctx.year + '::' + ctx.month + '::*::' + ctx.tenantName;
-    console.log('Get Tenant Request Key : ', key);
     var response = {
         tenantName: ctx.tenantName,
         year: ctx.year,
         month: ctx.month
     };
 
-    var getTenantSummary = getTenantSummaryFromMonthlyDataFile(key, ctx);
+    var getTenantSummary = getMonthlyTenantSummary(key, ctx);
 
     return getTenantSummary.then(function (tenantSummary) {
         response.total = tenantSummary.total;
@@ -67,52 +66,73 @@ function getFixedMonthlyHouseRentPerTenant() {
         });
 }
 
-function getTenantYearlySummary(ctx) {
-    var totals = {
-        tenantName: ctx.tenantName,
-        year: ctx.year,
-        total: 0,
-        runningTotal: 0,
-        util: {
-            gas: 0,
-            electricity: 0,
-            household: 0
-        }
-    };
-
+function getUtilYearlySummary(ctx) {
     var monthsInYear = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
     var responses = monthsInYear.map(function (month) {
-        var key = ctx.year + '::' + month + '::*::' + ctx.tenantName;
-        return getTenantSummaryFromMonthlyDataFile(key, ctx);
+        var key = ctx.year + '::' + month + '*';
+        return getMonthlyTenantSummary(key, ctx);
     });
 
-    return promise.all(responses).then(function (items) {
-        return items.reduce(function addToTotals(totals, monthly) {
-            console.log('Promises Loop');
-            console.objectLog(monthly);
-            totals.total += monthly.total;
-            totals.runningTotal += monthly.runningTotal;
-            totals.util.gas += monthly.gas;
-            totals.util.electricity += monthly.electricity;
-            totals.util.household += monthly.household;
-            return totals;
-        }, totals);
+    return promise.all(responses).then(function (monthlySummary) {
+        return [{
+                name: 'gas',
+                data: monthlySummary.map(function (monthly) {
+                    return monthly.gas;
+                })
+            }, {
+                name: 'electricity',
+                data: monthlySummary.map(function (monthly) {
+                    return monthly.electricity;
+                })
+            }, {
+                name: 'household',
+
+                data: monthlySummary.map(function (monthly) {
+                    return monthly.household;
+                })
+            }, {
+                name: 'combined',
+                data: monthlySummary.map(function (monthly) {
+                    return monthly.runningTotal;
+                })
+            }
+
+        ];
 
     });
 }
 
-function getTenantSummaryFromMonthlyDataFile(key, ctx) {
-    console.log('getTenantSummaryFromMonthlyDataFile');
+function getTenantYearlySummary(ctx) {
+
+    var monthsInYear = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+    var responses = monthsInYear.map(function (month) {
+        ctx.month = month;
+        return perPersonMonthlySummary(ctx);
+    });
+
+    return promise.all(responses).then(function (items) {
+        return items.map(function (monthly) {
+            return monthly.total;
+        });
+
+    }).then(function (monthlySummary) {
+        return [{
+            name: ctx.tenantName,
+            data: monthlySummary
+        }];
+
+    });
+}
+
+function getMonthlyTenantSummary(key, ctx) {
     var getUtilitySummaryForTenant = redisStore.getByWildcardKey(key)
         .then(function (values) {
-            console.log('Raw Data From Store ================');
             return Promise.all(values.map(function (keyValue) {
                 return keyValue.value;
 
             }));
         })
         .then(function (keyValueArray) {
-            console.objectLog(keyValueArray);
             var gas = _.sum(keyValueArray, function (tenant) {
                 return tenant.gas;
             });
@@ -135,7 +155,6 @@ function getTenantSummaryFromMonthlyDataFile(key, ctx) {
     return promise.all([perPersonMonthlySummary(ctx), getUtilitySummaryForTenant])
         .then(function (values) {
             console.log('per person monthly summary');
-            console.objectLog(values);
             var utils = values[1];
             var total = values[0].total - utils.runningTotal;
             return {
@@ -150,15 +169,14 @@ function getTenantSummaryFromMonthlyDataFile(key, ctx) {
 
 function perPersonMonthlySummary(ctx) {
     var key = ctx.year + '::' + ctx.month + '::*';
-
     var monthlySummary = redisStore.getByWildcardKey(key)
         .then(function (values) {
             return Promise.all(values.map(function (keyValue) {
                 return keyValue.value;
             }));
         })
-        .then(function (flattenedArray) {
-            return flattenedArray.map(function (item) {
+        .then(function (tenantDocs) {
+            return tenantDocs.map(function (item) {
                 return {
                     gas: item.gas,
                     electricity: item.electricity,
@@ -167,18 +185,18 @@ function perPersonMonthlySummary(ctx) {
             });
         })
 
-    .then(function (utilArray) {
+    .then(function (tenantsUtilArray) {
 
-        var totalUtilityExpensesForMonthForAlltenants = _.sum(utilArray, function (util) {
+        var totalUtilityExpensesForMonthForAlltenants = _.sum(tenantsUtilArray, function (util) {
             return util.gas + util.electricity + util.household;
         });
-        var gas = _.sum(utilArray, function (util) {
+        var gas = _.sum(tenantsUtilArray, function (util) {
             return util.gas;
         });
-        var electricity = _.sum(utilArray, function (util) {
+        var electricity = _.sum(tenantsUtilArray, function (util) {
             return util.electricity;
         });
-        var household = _.sum(utilArray, function (util) {
+        var household = _.sum(tenantsUtilArray, function (util) {
             return util.household;
         });
         var response = {
@@ -209,5 +227,6 @@ module.exports = {
     getTenantYearlySummary: getTenantYearlySummary,
     getAllTenantsMonthlySummary: getAllTenantsMonthlySummary,
     perPersonMonthlySummary: perPersonMonthlySummary,
+    getUtilYearlySummary: getUtilYearlySummary,
     save: save
 };
