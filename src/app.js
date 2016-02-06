@@ -3,11 +3,48 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var db = require('./middleware/auth');
+
 require('./extensions');
 
 var routes = require('./routes/index');
-
 var app = express();
+
+//passport setup
+
+passport.use(new LocalStrategy(
+    function (username, password, cb) {
+        db.users.findByUsername(username, function (err, user) {
+            if (err) {
+                return cb(err);
+            }
+            if (!user) {
+                return cb(null, false);
+            }
+            if (user.password !== password) {
+                return cb(null, false);
+            }
+            return cb(null, user);
+        });
+    }));
+
+passport.serializeUser(function (user, cb) {
+    cb(null, user.id);
+});
+
+passport.deserializeUser(function (id, cb) {
+    db.user.findById(id, function (err, user) {
+        if (err) {
+            return cb(err);
+        }
+        cb(null, user);
+    });
+});
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -22,12 +59,13 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../', '/public')));
 
 //routes
 app.use('/', routes);
 app.use('/admin', require('./routes/admin.js'));
 app.use('/myView', require('./routes/myview.js'));
+app.use('/expenses', require('./routes/expenses.js'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
