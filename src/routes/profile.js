@@ -65,20 +65,21 @@ function validate(formFields) {
     return errors;
 }
 
-/* POST home page. */
-router.post('/', function (req, res) {
+/* POST expenses. */
+router.post('/update_expenses_sheets', function (req, res) {
     errors.clear();
     validate(req.body);
     if (errors.length) {
         res.render('profile', {
+            user: req.params.user,
             title: 'Rent Portal',
             errors: errors
         });
     } else {
-        //  var errors = req.validationErrors();
-
+        req.body.tenants = req.params.user;
         persistRentalData.saveData(req.body).then(function () {
             res.render('profile', {
+                user: req.params.user,
                 title: 'Rent Portal',
                 message: 'Successfully logged the Data',
                 errors: errors

@@ -14,17 +14,14 @@ block content
 	.container
 		.row
 			.span12
-				form(name="expensesSheet", action='/', method="post")
+				form(name="expensesSheet", action='/profile/update_expenses_sheets', method="post")
 					fieldset 
 						.control-group
-							label.col-md-3.control-label(ng-show='Tenants', for='1') Select Tenant
-								select(name='tenants')
-									each i in ["Srinu", "George", "Sam", "Vikram", ""]
-										option(value=i) #{i}
+							input(type='hidden', name='user', value='#{user}')
 						.control-group 
 							label.control-label 
 								.controls
-									span.help-inline SelectDate  
+									label.help-inline SelectDate  
 									input.input-xlarge#datepicker(type='date', name='selectedDay')
 									
 						.control-group 
