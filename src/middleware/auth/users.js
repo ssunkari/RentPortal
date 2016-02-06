@@ -1,8 +1,8 @@
 var records = [{
     id: 1,
-    username: 'jack',
+    username: 'Srinu',
     password: 'secret',
-    displayName: 'Jack',
+    displayName: 'Srinu',
     emails: [{
         value: 'jack@example.com'
     }]

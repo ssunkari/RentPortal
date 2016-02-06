@@ -2,15 +2,28 @@ var express = require('express');
 var router = express.Router();
 var persistRentalData = require('../middleware/persistRentalData');
 var errors = [];
+var moment = require('moment');
 /* GET home page. */
 router.get('/:user',
     require('connect-ensure-login').ensureLoggedIn('/'),
     function (req, res) {
-        res.render('profile', {
-            title: 'Rent Portal',
-            user: req.params.user,
-            errors: []
+
+        var date = moment();
+        persistRentalData.getTenantMonthlySummary({
+            tenantName: req.params.user,
+            year: date.format('YYYY'),
+            month: date.format('MM')
+        }).then(function (monthlySummary) {
+            console.dir(monthlySummary);
+            res.render('profile', {
+                title: 'Rent Portal',
+                user: req.params.user,
+                errors: [],
+                currentMonthSummary: monthlySummary
+            });
+
         });
+
     });
 
 router.get('/total/:year/:month/:tenant', function (req, res) {
