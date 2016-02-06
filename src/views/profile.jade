@@ -2,8 +2,8 @@ extends layout
 
 block content
 	h1=title
-	p Welcome to 35 Stanley Avenue Rent Portal #{title}
-	p View Tenant Expenses History
+	p Welcome #{user} to 35 Stanley Avenue Rent Portal 
+	a(href='/logout') logout
 	form(name="expensesSheet", action='/myview', method="post")
 		select(name='tenant_name')
 									each i in ["Srinu", "George", "Sam", "Vikram"]

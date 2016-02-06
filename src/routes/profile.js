@@ -3,12 +3,15 @@ var router = express.Router();
 var persistRentalData = require('../middleware/persistRentalData');
 var errors = [];
 /* GET home page. */
-router.get('/', function (req, res) {
-    res.render('expenses', {
-        title: 'Rent Portal',
-        errors: []
+router.get('/:user',
+    require('connect-ensure-login').ensureLoggedIn('/'),
+    function (req, res) {
+        res.render('profile', {
+            title: 'Rent Portal',
+            user: req.params.user,
+            errors: []
+        });
     });
-});
 
 router.get('/total/:year/:month/:tenant', function (req, res) {
     persistRentalData.getTenantMonthlySummary(normalizedCtx(req.params)).then(function (data) {
@@ -67,7 +70,7 @@ router.post('/', function (req, res) {
     errors.clear();
     validate(req.body);
     if (errors.length) {
-        res.render('expenses', {
+        res.render('profile', {
             title: 'Rent Portal',
             errors: errors
         });
@@ -75,7 +78,7 @@ router.post('/', function (req, res) {
         //  var errors = req.validationErrors();
 
         persistRentalData.saveData(req.body).then(function () {
-            res.render('expenses', {
+            res.render('profile', {
                 title: 'Rent Portal',
                 message: 'Successfully logged the Data',
                 errors: errors

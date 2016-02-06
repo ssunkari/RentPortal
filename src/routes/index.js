@@ -9,6 +9,12 @@ router.get('/', function (req, res) {
     });
 });
 
+router.get('/logout',
+    function (req, res) {
+        req.logout();
+        res.redirect('/');
+    });
+
 router.post('/', function (req, res, next) {
     passport.authenticate('local',
         function (err, user, info) {
@@ -25,7 +31,7 @@ router.post('/', function (req, res, next) {
                 if (err) {
                     return next(err);
                 }
-                return res.redirect('/expenses');
+                return res.redirect('profile/' + req.user.username);
             });
         })(req, res, next);
 

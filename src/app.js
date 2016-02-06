@@ -35,13 +35,18 @@ passport.serializeUser(function (user, cb) {
 });
 
 passport.deserializeUser(function (id, cb) {
-    db.user.findById(id, function (err, user) {
+    db.users.findById(id, function (err, user) {
         if (err) {
             return cb(err);
         }
         cb(null, user);
     });
 });
+app.use(require('express-session')({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: false
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -65,7 +70,7 @@ app.use(express.static(path.join(__dirname, '../', '/public')));
 app.use('/', routes);
 app.use('/admin', require('./routes/admin.js'));
 app.use('/myView', require('./routes/myview.js'));
-app.use('/expenses', require('./routes/expenses.js'));
+app.use('/profile', require('./routes/profile.js'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
