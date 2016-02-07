@@ -1,18 +1,21 @@
 extends layout
 
+
 block content
+  //- link(href='/stylesheets/signin.css', rel='stylesheet')
+  //- link(href='/stylesheets/bootstrap.min.css', rel='stylesheet')
   .container
-    h1 Login Page
-    p.lead Authentication is required to get you to right place.
-    br
-    form(role='form', action="/",method="post", style='max-width: 300px;')
+    form.form-signin(role='form', action="/",method="post", style='max-width: 300px;')
+      h2.form-signin-heading Please sign in
+      p.lead Authentication is required to get you to right place.
       .form-group
-          input.form-control(type='text', name="username", placeholder='Enter Username')
+          input.form-control(type='text', name="username", placeholder='Enter Username' ,required='')
       .form-group
-        input.form-control(type='password', name="password", placeholder='Password')
-      button.btn.btn-default(type='submit') Submit
-      &nbsp;
-      a(href='/')
-        button.btn.btn-primary(type="button") Cancel
+        input.form-control(type='password', name="password", placeholder='Password', required='')
+      label.checkbox
+        input(type='checkbox', value='remember-me')
+        |  Remember me
+      br
+      button.btn.btn-lg.btn-primary.btn-block(type='submit') Submit
     label.error-label    
       p=errMsg

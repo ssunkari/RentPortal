@@ -1,17 +1,7 @@
 body {
-  padding: 50px;
   padding-top: 40px;
   padding-bottom: 40px;
   background-color: #eee;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
-
-a {
-  color: #00B7FF;
-}
-
-.error-label {
-color: red;
 }
 
 .form-signin {
@@ -38,7 +28,7 @@ color: red;
 .form-signin .form-control:focus {
   z-index: 2;
 }
-.form-signin input[type="username"] {
+.form-signin input[type="email"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
