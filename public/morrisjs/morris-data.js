@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
 
     Morris.Area({
         element: 'morris-area-chart',
@@ -79,39 +79,47 @@ $(function() {
     Morris.Bar({
         element: 'morris-bar-chart',
         data: [{
-            y: '2006',
-            a: 100,
-            b: 90
+            y: 'Jan',
+            a: 200,
         }, {
-            y: '2007',
+            y: 'Feb',
             a: 75,
-            b: 65
         }, {
-            y: '2008',
+            y: 'Mar',
             a: 50,
-            b: 40
         }, {
-            y: '2009',
+            y: 'Apr',
             a: 75,
-            b: 65
         }, {
-            y: '2010',
+            y: 'May',
             a: 50,
-            b: 40
         }, {
-            y: '2011',
+            y: 'Jun',
             a: 75,
-            b: 65
         }, {
-            y: '2012',
+            y: 'Jul',
             a: 100,
-            b: 90
+        }, {
+            y: 'Aug',
+            a: 100,
+        }, {
+            y: 'Sep',
+            a: 100,
+        }, {
+            y: 'Oct',
+            a: 100,
+        }, {
+            y: 'Nov',
+            a: 100,
+        }, {
+            y: 'Dec',
+            a: 100,
         }],
         xkey: 'y',
-        ykeys: ['a', 'b'],
-        labels: ['Series A', 'Series B'],
+        ykeys: ['a'],
+        labels: ['Rent/Month Including Bills'],
         hideHover: 'auto',
         resize: true
     });
-    
+
 });
