@@ -62,7 +62,8 @@ function getAllTenantsMonthlySummary(ctx) {
 function getFixedMonthlyHouseRentPerTenant() {
     return redisStore
         .getByKey('35::stanley').then(function (houseConfig) {
-            return houseConfig.total_rent / houseConfig.num_of_tenants;
+            if (houseConfig)
+                return houseConfig.total_rent / houseConfig.num_of_tenants;
         });
 }
 

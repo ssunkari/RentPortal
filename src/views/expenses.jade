@@ -1,0 +1,46 @@
+extends layout
+
+block content
+	p Submit Monthly Expenses
+	.container
+		.row
+			.span12
+				form(name="expensesSheet", action='/profile/#{user}/expenses', method="post")
+					fieldset 
+						.control-group
+							input(type='hidden', name='user', value='#{user}')
+						.control-group 
+							label.control-label 
+								.controls
+									label.help-inline SelectDate  
+									input.input-xlarge#datepicker(type='date', name='selectedDay')
+									
+						.control-group 
+							.controls
+								table
+									thead
+										tr
+											for day in ['Utility Type','Util']
+												th= day
+										tbody
+											//for object in ['Gas', 'Electricity', 'HouseHold']
+											tr
+												td=	'Gas'
+												td
+													input(type='text', name='gas')
+											tr
+												td=	'Electricity'
+												td
+													input(type='text', name='electricity')
+											tr
+												td=	'HouseHold'
+												td
+													input(type='text', name='household')
+				
+						.control-group
+							.controls
+								input(type="submit", value="Submit")
+								label.error-label
+									for error in errors
+										p * #{error}
+								p=message						
