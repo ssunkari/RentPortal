@@ -5,7 +5,7 @@ var errors = [];
 var moment = require('moment');
 /* GET home page. */
 router.get('/:user',
-    require('connect-ensure-login').ensureLoggedIn('/'),
+    // require('connect-ensure-login').ensureLoggedIn('/'),
     function (req, res) {
 
         var date = moment();
