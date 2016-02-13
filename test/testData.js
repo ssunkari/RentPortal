@@ -1,30 +1,26 @@
 var sriUtilFor0314 = {
     tenants: 'Srinu',
     selectedDay: '2016-03-14',
-    gas: '20',
-    electricity: '',
-    household: ''
+    utilType: 'gas',
+    amount: '20'
 };
 var sriUtilFor0414 = {
     tenants: 'Srinu',
     selectedDay: '2016-04-14',
-    gas: '100',
-    electricity: '',
-    household: ''
+    utilType: 'gas',
+    amount: '100'
 };
 var sriUtilFor0315 = {
     tenants: 'Srinu',
     selectedDay: '2016-03-15',
-    gas: '',
-    electricity: '40',
-    household: ''
+    utilType: 'electricity',
+    amount: '40'
 };
 var georgeUtilFor0315 = {
     tenants: 'George',
     selectedDay: '2016-03-15',
-    gas: '40',
-    electricity: '',
-    household: ''
+    utilType: 'gas',
+    amount: '40'
 };
 
 module.exports = {

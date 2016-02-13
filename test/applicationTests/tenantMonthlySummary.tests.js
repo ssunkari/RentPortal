@@ -18,7 +18,7 @@ describe('Tenant monthly summary', function () {
 
     describe('given one month data', function () {
         beforeEach(function (done) {
-            messageTester.messageTester(testData.sriUtilFor0314, done);
+            messageTester.messageTester(testData.sriUtilFor0314, 'expenses?user=' + testData.sriUtilFor0314.tenants, done);
         });
 
         it('should return tenant monthly summary', function (done) {
@@ -43,8 +43,8 @@ describe('Tenant monthly summary', function () {
     });
     describe('with two day monthly data setup', function () {
         beforeEach(function (done) {
-            messageTester.messageTester(testData.sriUtilFor0314, function () {
-                messageTester.messageTester(testData.sriUtilFor0315, done);
+            messageTester.messageTester(testData.sriUtilFor0314, 'expenses?user=' + testData.sriUtilFor0314.tenants, function () {
+                messageTester.messageTester(testData.sriUtilFor0315, 'expenses?user=' + testData.sriUtilFor0315.tenants, done);
             });
         });
         it('should return tenant summary', function (done) {
@@ -70,11 +70,11 @@ describe('Tenant monthly summary', function () {
     });
     describe('given unique multi tenant data', function () {
         beforeEach(function (done) {
-            messageTester.messageTester(testData.sriUtilFor0315, done);
+            messageTester.messageTester(testData.sriUtilFor0315, 'expenses?user=' + testData.sriUtilFor0315.tenants, done);
 
         });
         beforeEach(function (done) {
-            messageTester.messageTester(testData.georgeUtilFor0315, done);
+            messageTester.messageTester(testData.georgeUtilFor0315, 'expenses?user=' + testData.georgeUtilFor0315.tenants, done);
         });
 
         it('should return selected tenant total', function (done) {
@@ -99,15 +99,15 @@ describe('Tenant monthly summary', function () {
     });
     describe('given multi tenant multi day one month data', function () {
         beforeEach(function (done) {
-            messageTester.messageTester(testData.sriUtilFor0315, done);
+            messageTester.messageTester(testData.sriUtilFor0315, 'expenses?user=' + testData.sriUtilFor0315.tenants, done);
 
         });
         beforeEach(function (done) {
-            messageTester.messageTester(testData.sriUtilFor0314, done);
+            messageTester.messageTester(testData.sriUtilFor0314, 'expenses?user=' + testData.sriUtilFor0314.tenants, done);
 
         });
         beforeEach(function (done) {
-            messageTester.messageTester(testData.georgeUtilFor0315, done);
+            messageTester.messageTester(testData.georgeUtilFor0315, 'expenses?user=' + testData.georgeUtilFor0315.tenants, done);
         });
 
         it('should return selected tenant total', function (done) {
@@ -133,10 +133,10 @@ describe('Tenant monthly summary', function () {
     describe('all tenants', function () {
         describe('with two tenants data', function () {
             beforeEach(function (done) {
-                messageTester.messageTester(testData.sriUtilFor0314, done);
+                messageTester.messageTester(testData.sriUtilFor0314, 'expenses?user=' + testData.sriUtilFor0314.tenants, done);
             });
             beforeEach(function (done) {
-                messageTester.messageTester(testData.georgeUtilFor0315, done);
+                messageTester.messageTester(testData.georgeUtilFor0315, 'expenses?user=' + testData.georgeUtilFor0315.tenants, done);
             });
 
             it('should return all tenants monthly summary', function (done) {

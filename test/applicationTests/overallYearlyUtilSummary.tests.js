@@ -20,8 +20,8 @@ describe('yearly util total summary', function () {
 
     describe('with two months data', function () {
         beforeEach(function (done) {
-            messageTester.messageTester(testData.sriUtilFor0314, function () {
-                messageTester.messageTester(testData.sriUtilFor0414, done);
+            messageTester.messageTester(testData.sriUtilFor0314, 'expenses?user=' + testData.sriUtilFor0314.tenants, function () {
+                messageTester.messageTester(testData.sriUtilFor0414, 'expenses?user=' + testData.sriUtilFor0414.tenants, done);
             });
         });
         it('should return tenant yearly breakdown', function (done) {

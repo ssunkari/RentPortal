@@ -62,8 +62,9 @@ function getAllTenantsMonthlySummary(ctx) {
 function getFixedMonthlyHouseRentPerTenant() {
     return redisStore
         .getByKey('35::stanley').then(function (houseConfig) {
-            if (houseConfig)
+            if (houseConfig) {
                 return houseConfig.total_rent / houseConfig.num_of_tenants;
+            }
         });
 }
 
@@ -143,6 +144,7 @@ function getMonthlyTenantSummary(key, ctx) {
             var household = _.sum(keyValueArray, function (tenant) {
                 return tenant.household;
             });
+            console.log('gas :', gas, 'electricity :', electricity, 'household', household);
             var runningTotal = gas + electricity + household;
 
             return {
@@ -189,22 +191,21 @@ function perPersonMonthlySummary(ctx) {
     .then(function (tenantsUtilArray) {
 
         var totalUtilityExpensesForMonthForAlltenants = _.sum(tenantsUtilArray, function (util) {
-            return util.gas + util.electricity + util.household;
+            return util.gas | 0 + util.electricity | 0 + util.household | 0;
         });
         var gas = _.sum(tenantsUtilArray, function (util) {
-            return util.gas;
+            return util.gas | 0;
         });
         var electricity = _.sum(tenantsUtilArray, function (util) {
-            return util.electricity;
+            return util.electricity | 0;
         });
         var household = _.sum(tenantsUtilArray, function (util) {
-            return util.household;
+            return util.household | 0;
         });
         var response = {
             year: ctx.year,
             month: ctx.month
         };
-
         response.total = totalUtilityExpensesForMonthForAlltenants / 4;
         response.util = {
             gas: gas,

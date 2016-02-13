@@ -5,11 +5,11 @@ Array.prototype.clear = function () {
     }
 };
 
-Object.mapObjectToArray = function (data_post) {
+Object.mapObjectToArray = function (object) {
     var keyValuePair = [];
-    Object.keys(data_post).map(function (key) {
+    Object.keys(object).map(function (key) {
         keyValuePair.push(key);
-        keyValuePair.push(data_post[key]);
+        keyValuePair.push(object[key]);
     });
     return keyValuePair;
 };

@@ -3,52 +3,46 @@ extends custom
 block content
      // Page Content
      #page-wrapper
-         .container-fluid
-           .row
-             .col-lg-12
-              .row
-               .span12
-                   form(name="expensesSheet", action='/profile/#{user}/expenses', method="post")
-                       fieldset 
-                           .control-group
-                               input(type='hidden', name='user', value='#{user}')
-                           .control-group 
-                               label.control-label 
-                                   .controls
-                                       label.help-inline SelectDate  
-                                       input.input-xlarge#datepicker(type='date', name='selectedDay')
-                                       
-                           .control-group 
-                               .controls
-                                   table
-                                       thead
-                                           tr
-                                               for day in ['Utility Type','Util']
-                                                   th= day
-                                           tbody
-                                               //for object in ['Gas', 'Electricity', 'HouseHold']
-                                               tr
-                                                   td= 'Gas'
-                                                   td
-                                                       input(type='text', name='gas')
-                                               tr
-                                                   td= 'Electricity'
-                                                   td
-                                                       input(type='text', name='electricity')
-                                               tr
-                                                   td= 'HouseHold'
-                                                   td
-                                                       input(type='text', name='household')
-                   
-                           .control-group
-                               .controls
-                                   input(type="submit", value="Submit")
-                                   label.error-label
-                                       for error in errors
-                                           p * #{error}
-                                   p=message                       
-             // /.col-lg-12
-           // /.row
-         // /.container-fluid
-       // /#page-wrapper
-       // /#wrapper     
+      .row
+       .col-lg-12
+         h1.page-header Expenses Form
+         // /.col-lg-12
+      .row
+       .col-lg-12
+        .panel.panel-default
+         .panel-heading
+          | Please submit your expenses before 28th every month
+         .panel-body
+          .row
+           .col-lg-6
+            form(role="form" name="expensesSheet", action='/expenses?user=#{user}', method="post")
+             .form-group
+              label Pick A Date
+              input.form-control#datepicker(type='date', name='selectedDay', required='')
+              p.help-block You shall only submit current month expenses.
+             .form-group
+              label Select Utility
+              .radio
+               label
+                input#optionsRadiosInline1(type='radio', name='utilType', value='gas', checked='')
+                | Gas
+
+              .radio
+               label
+                input#optionsRadiosInline2(type='radio', name='utilType', value='electricity')
+                | Electricity
+
+              .radio
+               label
+                input#optionsRadiosInline3(type='radio', name='utilType', value='household')
+                | HouseHold
+             .form-group.input-group
+              span.input-group-addon
+                  i.fa.fa-gbp
+              input.form-control(type='text', name='amount', required='',placeholder='Enter Amount')
+             .form-group
+              button.btn.btn-primary.btn-lg(type='submit') Submit
+              label.error-label
+                for error in errors
+                    p * #{error}
+               p=message

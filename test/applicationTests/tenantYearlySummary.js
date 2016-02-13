@@ -18,10 +18,10 @@ describe('yearly summary', function () {
         }, 'admin/houseConfig', done);
     });
     beforeEach(function (done) {
-        messageTester.messageTester(testData.sriUtilFor0314, done);
+        messageTester.messageTester(testData.sriUtilFor0314, 'expenses?user=' + testData.sriUtilFor0314.tenants, done);
     });
     beforeEach(function (done) {
-        messageTester.messageTester(testData.sriUtilFor0414, done);
+        messageTester.messageTester(testData.sriUtilFor0414, 'expenses?user=' + testData.sriUtilFor0314.tenants, done);
     });
     describe('particular tenant', function () {
         describe('with two months data', function () {
