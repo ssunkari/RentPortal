@@ -7,13 +7,13 @@ var moment = require('moment');
 router.get('/:user',
     // require('connect-ensure-login').ensureLoggedIn('/'),
     function (req, res) {
-
         var date = moment();
         persistRentalData.getTenantMonthlySummary({
             tenantName: req.params.user,
             year: date.format('YYYY'),
             month: date.format('MM')
         }).then(function (monthlySummary) {
+            console.log('===============');
             console.dir(monthlySummary);
             res.render('profile', {
                 title: 'Rent Portal',

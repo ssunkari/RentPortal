@@ -3,9 +3,12 @@ extends custom
 block content
   #page-wrapper
    .row
-    .col-lg-12
+    .col-lg-3.col-md-6
       h1.page-header Dashboard
-     // /.col-lg-12
+      // /.col-lg-3
+     .col-lg-3.col-md-6
+      h1.page-header#time 
+      // /.col-lg-3
    .row
     .col-lg-3.col-md-6
         .panel.panel-primary
@@ -15,7 +18,7 @@ block content
                 i.fa.fa-home.fa-5x
               |                                 
               .col-xs-9.text-right
-                .huge 26
+                .huge £#{currentMonthSummary.util.household}
                 |                                     
                 div Other Household / Person
           |                         
@@ -27,66 +30,66 @@ block content
                 i.fa.fa-arrow-circle-right
               |                                 
               .clearfix
-      .col-lg-3.col-md-6
-        .panel.panel-green
-          .panel-heading
-            .row
-              .col-xs-3
-                i.fa.fa-laptop.fa-5x
-              |                                 
-              .col-xs-9.text-right
-                .huge 12
-                |                                     
-                div Water & Internet / Person
-          |                         
-          a(href='#')
-            .panel-footer
-              span.pull-left See how its calculated
-              |                                 
-              span.pull-right
-                i.fa.fa-arrow-circle-right
-              |                                 
-              .clearfix
-      .col-lg-3.col-md-6
-        .panel.panel-yellow
-          .panel-heading
-            .row
-              .col-xs-3
-                i.fa.fa-bolt.fa-5x
-              |                                 
-              .col-xs-9.text-right
-                .huge 124
-                |                                     
-                div Gas & Electric / Person !
-          |                         
-          a(href='#')
-            .panel-footer
-              span.pull-left See how its calculated
-              |                                 
-              span.pull-right
-                i.fa.fa-arrow-circle-right
-              |                                 
-              .clearfix
-      .col-lg-3.col-md-6
-        .panel.panel-red
-          .panel-heading
-            .row
-              .col-xs-3
-                i.fa.fa-support.fa-5x
-              |                                 
-              .col-xs-9.text-right
-                .huge 13
-                |                                     
-                div Total Rent / Person!
-          |                         
-          a(href='#')
-            .panel-footer
-              span.pull-left See how its calculated
-              |                                 
-              span.pull-right
-                i.fa.fa-arrow-circle-right
-              |                                 
-              .clearfix
+    .col-lg-3.col-md-6
+      .panel.panel-green
+        .panel-heading
+          .row
+            .col-xs-3
+              i.fa.fa-laptop.fa-5x
+            |                                 
+            .col-xs-9.text-right
+              .huge £14
+              |                                     
+              div Water & Internet / Person
+        |                         
+        a(href='#')
+          .panel-footer
+            span.pull-left See how its calculated
+            |                                 
+            span.pull-right
+              i.fa.fa-arrow-circle-right
+            |                                 
+            .clearfix
+    .col-lg-3.col-md-6
+      .panel.panel-yellow
+        .panel-heading
+          .row
+            .col-xs-3
+              i.fa.fa-bolt.fa-5x
+            |                                 
+            .col-xs-9.text-right
+              .huge £#{currentMonthSummary.util.gas + currentMonthSummary.util.electricity}
+              |                                     
+              div Gas & Electric / Person !
+        |                         
+        a(href='#')
+          .panel-footer
+            span.pull-left See how its calculated
+            |                                 
+            span.pull-right
+              i.fa.fa-arrow-circle-right
+            |                                 
+            .clearfix
+    .col-lg-3.col-md-6
+      .panel.panel-red
+        .panel-heading
+          .row
+            .col-xs-3
+              i.fa.fa-support.fa-5x
+            |                                 
+            .col-xs-9.text-right
+              .huge £#{currentMonthSummary.total}
+              |                                     
+              div Total Rent / Person!
+        |                         
+        a(href='#')
+          .panel-footer
+            span.pull-left See how its calculated
+            |                                 
+            span.pull-right
+              i.fa.fa-arrow-circle-right
+            |                                 
+            .clearfix
    .row
     .col-lg-8
         .panel.panel-default
@@ -435,10 +438,10 @@ block content
       .panel.panel-default
         .panel-heading
           i.fa.fa-bar-chart-o.fa-fw
-          |  Donut Chart Example
+          |  What you should pay
         |                         
         .panel-body
-          #morris-donut-chart
+          #current-month-util-summary
           |                             
           a.btn.btn-default.btn-block(href='#') View Details
         // /.panel-body
