@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var moment = require('moment');
 var errors = [];
 var persistRentalData = require('../middleware/persistRentalData');
 var houseshares = require('../middleware/houseshares');
@@ -42,9 +43,11 @@ router.get('/data/houseshares',
 router.get('/houseshares',
     //   require('connect-ensure-login').ensureLoggedIn('/'),
     function (req, res) {
+        var startDate = req.query.startDate || moment().startOf('month').format('YYYY-MM-DD');
+        var endDate = req.query.endDate || moment().endOf('month').format('YYYY-MM-DD');
         houseshares.getByDates(req.query.user, {
-            startDate: req.query.startDate,
-            endDate: req.query.endDate
+            startDate: startDate,
+            endDate: endDate
         }).then(function (result) {
             console.log('result length : ', result.length);
             res.render('houseshares', {
