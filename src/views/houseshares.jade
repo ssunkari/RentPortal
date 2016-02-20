@@ -1,0 +1,52 @@
+extends custom
+
+block content
+    link(href="/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css", rel="stylesheet")
+    link(href="/datatables-responsive/css/responsive.dataTables.css", rel="stylesheet")
+    // Page Content
+    #page-wrapper
+     .row
+      .col-lg-12
+       h1.page-header Your monthly util summary
+        // /.col-lg-12
+     .row
+      .col-lg-12
+       .pane.panel-default
+        .panel-heading
+         | cost share summary
+        .panel-body
+         .dataTable_wrapper
+          table#dataTables-example.table.table-striped.table-bordered.table-hover(width='100%')
+           thead
+            tr
+              th Date 
+              |                                             
+              th Who Paid?
+              |                                             
+              th What was it?
+              |                                             
+              th Amount
+              |                                             
+              th Your Share
+             tbody
+              each item in result 
+               tr.odd.gradeX
+                  td= item.purchaseDate
+                  |                                             
+                  td= item.tenantName
+                  |                                             
+                  td= item.expenses[0].utilType
+                  |                                             
+                  td.center= '£'+item.expenses[0].amount
+                  |                                             
+                  td.center= '£'+item.expenses[0].shared
+
+    script(src='/datatables/media/js/jquery.dataTables.min.js')
+    script(src='/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js')
+    script(src='/datatables-responsive/js/dataTables.responsive.js')
+    script.
+     $(document).ready(function() {
+      $('#dataTables-example').DataTable({
+      responsive: true
+      });
+      });

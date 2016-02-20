@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var errors = [];
 var persistRentalData = require('../middleware/persistRentalData');
+var houseshares = require('../middleware/houseshares');
 
 /* GET home page. */
 router.get('/',
@@ -9,9 +10,48 @@ router.get('/',
     function (req, res) {
 
         res.render('expenses', {
-            title: 'Expenses Portal',
+            title: 'Submit Expenses',
             errors: [],
             user: req.query.user
+        });
+    });
+
+/* GET Expenses*/
+router.get('/',
+    //   require('connect-ensure-login').ensureLoggedIn('/'),
+    function (req, res) {
+
+        res.render('getexpenses', {
+            title: 'Submit Expenses',
+            errors: [],
+            user: req.query.user
+        });
+    });
+
+router.get('/data/houseshares',
+    //   require('connect-ensure-login').ensureLoggedIn('/'),
+    function (req, res) {
+        houseshares.getByDates(req.query.user, {
+            startDate: req.query.startDate,
+            endDate: req.query.endDate
+        }).then(function (result) {
+            return res.json(result);
+        });
+    });
+
+router.get('/houseshares',
+    //   require('connect-ensure-login').ensureLoggedIn('/'),
+    function (req, res) {
+        houseshares.getByDates(req.query.user, {
+            startDate: req.query.startDate,
+            endDate: req.query.endDate
+        }).then(function (result) {
+            console.log('result length : ', result.length);
+            res.render('houseshares', {
+                user: req.query.user,
+                title: 'Rent Portal',
+                result: result
+            });
         });
     });
 

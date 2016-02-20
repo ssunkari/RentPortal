@@ -2,11 +2,10 @@ var moment = require('moment');
 var _ = require('lodash');
 var redisClient = require('../redisClient');
 var redisStore = require('./redis/redisStore');
-var promise = require('bluebird');
 var Promise = require('bluebird');
 
 function save(key, value) {
-    return promise.resolve(redisClient.set(key, value));
+    return Promise.resolve(redisClient.set(key, value));
 }
 
 function buildKey(formData) {
@@ -52,7 +51,7 @@ function getTenantMonthlySummary(ctx) {
 
 function getAllTenantsMonthlySummary(ctx) {
     var listOfTenants = ['Srinu', 'George', 'Sam', 'Vikram'];
-    return promise.all(listOfTenants.map(function (tenant) {
+    return Promise.all(listOfTenants.map(function (tenant) {
         ctx.tenantName = tenant;
         return getTenantMonthlySummary(ctx);
     }));
@@ -75,7 +74,7 @@ function getUtilYearlySummary(ctx) {
         return getMonthlyTenantSummary(key, ctx);
     });
 
-    return promise.all(responses).then(function (monthlySummary) {
+    return Promise.all(responses).then(function (monthlySummary) {
         return [{
                 name: 'gas',
                 data: monthlySummary.map(function (monthly) {
@@ -112,7 +111,7 @@ function getTenantYearlySummary(ctx) {
         return perPersonMonthlySummary(ctx);
     });
 
-    return promise.all(responses).then(function (items) {
+    return Promise.all(responses).then(function (items) {
         return items.map(function (monthly) {
             return monthly.total;
         });
@@ -155,7 +154,7 @@ function getMonthlyTenantSummary(key, ctx) {
             };
         });
 
-    return promise.all([perPersonMonthlySummary(ctx), getUtilitySummaryForTenant])
+    return Promise.all([perPersonMonthlySummary(ctx), getUtilitySummaryForTenant])
         .then(function (values) {
             console.log('per person monthly summary');
             var utils = values[1];
@@ -216,7 +215,7 @@ function perPersonMonthlySummary(ctx) {
         return response;
     });
     var fixedHouseRentPerTenant = getFixedMonthlyHouseRentPerTenant();
-    return promise.all([monthlySummary, fixedHouseRentPerTenant]).then(function (values) {
+    return Promise.all([monthlySummary, fixedHouseRentPerTenant]).then(function (values) {
 
         values[0].total = values[0].total + values[1];
         return values[0];
