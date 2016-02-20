@@ -1,6 +1,7 @@
 var messageTester = require('../messageTester');
 var redisClient = require('../../src/middleware/redis/redisStore');
 var testData = require('../testData');
+var _ = require('lodash');
 describe('Tenant monthly summary', function () {
     this.timeout(5000);
     beforeEach(function (done) {
@@ -116,6 +117,40 @@ describe('Tenant monthly summary', function () {
                 year: '2016',
                 month: '03',
                 total: 127.5,
+                runningTotal: 60,
+                util: {
+                    gas: 20,
+                    electricity: 40,
+                    household: 0
+                }
+            };
+            messageTester.roomTotalTester({
+                year: '2016',
+                month: '03',
+                tenantName: 'Srinu'
+            }, expectedResponse, done);
+        });
+    });
+    describe('Same month - two day setup, start 01, end 31 march', function () {
+        beforeEach(function (done) {
+            var dataToPost = _.clone(testData.sriUtilFor0315);
+            dataToPost.selectedDay = '2016-03-01';
+            messageTester.messageTester(dataToPost, 'expenses?user=' + dataToPost.tenants, done);
+
+        });
+        beforeEach(function (done) {
+            var dataToPost = _.clone(testData.sriUtilFor0314);
+            dataToPost.selectedDay = '2016-03-31';
+            messageTester.messageTester(dataToPost, 'expenses?user=' + dataToPost.tenants, done);
+
+        });
+
+        it('should return selected tenant total for both dates for march', function (done) {
+            var expectedResponse = {
+                tenantName: 'Srinu',
+                year: '2016',
+                month: '03',
+                total: 117.5,
                 runningTotal: 60,
                 util: {
                     gas: 20,

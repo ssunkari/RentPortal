@@ -61,7 +61,7 @@ describe('store nested javascript obj to redis', function () {
     });
     describe('delete single property', function () {
         beforeEach(function (done) {
-            redisStore.delHashKeyValue("2016::01::01::Srinu", ["gas", "40"]).then(function (res) {
+            redisStore.delHashKeyValue("2016::01::01::Srinu", ["gas"]).then(function (res) {
                 console.log('Redis has key deleted succeeded :', res);
                 done();
             });

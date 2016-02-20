@@ -29,24 +29,30 @@ block content
               |                                             
               th Your Share
              tbody
-              each item in result 
-               tr.odd.gradeX
-                  td= item.purchaseDate
-                  |                                             
-                  td= item.tenantName
-                  |                                             
-                  td= item.expenses[0].utilType
-                  |                                             
-                  td.center= '£'+item.expenses[0].amount
-                  |                                             
-                  td.center= '£'+item.expenses[0].shared
+              - var i=0
+              each item in result                
+                each expenses in item.expenses
+                  - i++;
+                  tr(id=('rid_'+i)).odd.gradeX
+                    td= item.purchaseDate
+                    |                                             
+                    td= item.tenantName
+                    |                                             
+                    td= expenses.utilType
+                    |                                             
+                    td.center= '£'+expenses.amount
+                    |                                             
+                    td.center= '£'+expenses.shared
+                    td.center.button.btn.btn-warning.btn-square(type='button', name="deleteBtn#{item.expenses.indexOf(expenses)}" onclick='onDelete(rid_'+i+')')
+                              i.fa.fa-times
 
     script(src='/datatables/media/js/jquery.dataTables.min.js')
     script(src='/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js')
     script(src='/datatables-responsive/js/dataTables.responsive.js')
     script.
-     $(document).ready(function() {
-      $('#dataTables-example').DataTable({
-      responsive: true
-      });
+      $(document).ready(function() {
+
+        $('#dataTables-example').DataTable({
+        responsive: true
+        });
       });

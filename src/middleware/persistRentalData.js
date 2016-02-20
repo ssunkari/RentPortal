@@ -8,6 +8,19 @@ function save(key, value) {
     return Promise.resolve(redisClient.set(key, value));
 }
 
+function removeExpense(user, purchaseDate, utilType) {
+    var key = buildKey({
+        selectedDay: purchaseDate,
+        tenants: user
+    });
+    console.log('Remove Expenses: Key ::', key);
+    console.log('Remove Expenses: UtilType ::', utilType);
+
+    return redisStore.delHashKeyValue(key, [utilType]).then(function (res) {
+        console.log('Redis has key deleted succeeded :', res);
+    });
+}
+
 function buildKey(formData) {
     var selectedDate = moment(formData.selectedDay, 'YYYYMMDD');
     var month = selectedDate.format('MM');
@@ -229,5 +242,6 @@ module.exports = {
     getAllTenantsMonthlySummary: getAllTenantsMonthlySummary,
     perPersonMonthlySummary: perPersonMonthlySummary,
     getUtilYearlySummary: getUtilYearlySummary,
-    save: save
+    save: save,
+    removeExpense: removeExpense
 };

@@ -5,24 +5,12 @@ var errors = [];
 var persistRentalData = require('../middleware/persistRentalData');
 var houseshares = require('../middleware/houseshares');
 
-/* GET home page. */
-router.get('/',
-    //   require('connect-ensure-login').ensureLoggedIn('/'),
-    function (req, res) {
-
-        res.render('expenses', {
-            title: 'Submit Expenses',
-            errors: [],
-            user: req.query.user
-        });
-    });
-
 /* GET Expenses*/
 router.get('/',
     //   require('connect-ensure-login').ensureLoggedIn('/'),
     function (req, res) {
 
-        res.render('getexpenses', {
+        res.render('expenses', {
             title: 'Submit Expenses',
             errors: [],
             user: req.query.user
@@ -40,21 +28,34 @@ router.get('/data/houseshares',
         });
     });
 
+function viewHouseShares(startDate, endDate, user) {
+    return houseshares.getByDates(user, {
+        startDate: startDate || moment().startOf('month').format('YYYY-MM-DD'),
+        endDate: endDate || moment().endOf('month').format('YYYY-MM-DD')
+    });
+}
+
 router.get('/houseshares',
     //   require('connect-ensure-login').ensureLoggedIn('/'),
     function (req, res) {
-        var startDate = req.query.startDate || moment().startOf('month').format('YYYY-MM-DD');
-        var endDate = req.query.endDate || moment().endOf('month').format('YYYY-MM-DD');
-        houseshares.getByDates(req.query.user, {
-            startDate: startDate,
-            endDate: endDate
-        }).then(function (result) {
-            console.log('result length : ', result.length);
+        viewHouseShares(req.query.startDate, req.query.endDate, req.query.user).then(function (result) {
             res.render('houseshares', {
                 user: req.query.user,
                 title: 'Rent Portal',
                 result: result
             });
+        });
+    });
+
+router.delete('/delete',
+    //   require('connect-ensure-login').ensureLoggedIn('/'),
+    function (req, res) {
+        persistRentalData.removeExpense(req.query.user, req.query.purchaseDate, req.query.utilType).then(function (err) {
+            if (err) {
+                res.send(err, 500);
+            } else {
+                res.send('Successfully Deleted');
+            }
         });
     });
 
