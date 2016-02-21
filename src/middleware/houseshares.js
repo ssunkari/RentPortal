@@ -42,25 +42,35 @@ module.exports = {
             console.log('getByDates Key::', key);
             return key;
         }).map(function (key) {
-            return redisStore.getByKey(key);
+            return redisStore.getByWildcardKey(key)
+                .then(function (values) {
+                    return Promise.all(values.map(function (keyValue) {
+                        return keyValue.value;
+
+                    }));
+                });
+        }).then(function (promises) {
+            return Promise.all(promises);
+
         }).map(function (userUtilInfoByDay) {
 
-            if (userUtilInfoByDay) {
-                console.log(userUtilInfoByDay.costName);
+            if (userUtilInfoByDay && userUtilInfoByDay.length > 0) {
+                var userUtilInfoDayData = userUtilInfoByDay[0];
+                console.log(userUtilInfoDayData.costName);
                 var modifiedEnpensesObj = {
-                    purchaseDate: userUtilInfoByDay.selectedDay,
-                    tenantName: userUtilInfoByDay.tenants,
-                    costName: userUtilInfoByDay.costName,
+                    purchaseDate: userUtilInfoDayData.selectedDay,
+                    tenantName: userUtilInfoDayData.tenants,
+                    costName: userUtilInfoDayData.costName,
                     expenses: []
                 };
-                if (userUtilInfoByDay.gas) {
-                    modifiedEnpensesObj.expenses.push(addShareObject('gas', userUtilInfoByDay.gas));
+                if (userUtilInfoDayData.gas) {
+                    modifiedEnpensesObj.expenses.push(addShareObject('gas', userUtilInfoDayData.gas));
                 }
-                if (userUtilInfoByDay.electricity) {
-                    modifiedEnpensesObj.expenses.push(addShareObject('electricity', userUtilInfoByDay.electricity));
+                if (userUtilInfoDayData.electricity) {
+                    modifiedEnpensesObj.expenses.push(addShareObject('electricity', userUtilInfoDayData.electricity));
                 }
-                if (userUtilInfoByDay.household) {
-                    modifiedEnpensesObj.expenses.push(addShareObject('household', userUtilInfoByDay.household));
+                if (userUtilInfoDayData.household) {
+                    modifiedEnpensesObj.expenses.push(addShareObject('household', userUtilInfoDayData.household));
                 }
                 return modifiedEnpensesObj;
             }

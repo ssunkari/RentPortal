@@ -22,6 +22,7 @@ block content
                   .form-group
                     input.form-control#datepicker(type='date', name='startDate', required='')
                     input.form-control#datepicker(type='hidden', name='user', value='#{user}')
+                    input.form-control#datepicker(type='hidden', name='type', value='#{type}')
                 .col-lg-1
                   .form-group
                     label To
@@ -60,7 +61,8 @@ block content
                     td.center= '£'+expenses.amount
                     |                                             
                     td.center= '£'+expenses.shared
-                    td.center.button.btn.btn-warning.btn-square(type='button', name="deleteBtn#{item.expenses.indexOf(expenses)}" onclick='onDelete(rid_'+i+')')
+                     if !type
+                      td.center.button.btn.btn-warning.btn-square(type='button', name="deleteBtn#{item.expenses.indexOf(expenses)}" onclick='onDelete(rid_'+i+')')
                               i.fa.fa-times
 
     script(src='/datatables/media/js/jquery.dataTables.min.js')

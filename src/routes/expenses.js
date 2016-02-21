@@ -128,7 +128,8 @@ router.get('/houseshares',
             res.render('houseshares', {
                 user: req.query.user,
                 title: 'Rent Portal',
-                result: result
+                result: result,
+                type: type
             });
         });
     });
