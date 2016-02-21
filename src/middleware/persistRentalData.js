@@ -71,15 +71,6 @@ function getAllTenantsMonthlySummary(ctx) {
 
 }
 
-function getFixedMonthlyHouseRentPerTenant() {
-    return redisStore
-        .getByKey('35::stanley').then(function (houseConfig) {
-            if (houseConfig) {
-                return houseConfig.total_rent / houseConfig.num_of_tenants;
-            }
-        });
-}
-
 function getHouseConfig() {
     return redisStore
         .getByKey('35::stanley');
@@ -223,7 +214,7 @@ function perPersonMonthlySummary(ctx) {
             year: ctx.year,
             month: ctx.month
         };
-        response.total = totalUtilityExpensesForMonthForAlltenants / 4;
+        response.total = totalUtilityExpensesForMonthForAlltenants;
         response.util = {
             gas: gas,
             electricity: electricity,
@@ -232,10 +223,8 @@ function perPersonMonthlySummary(ctx) {
 
         return response;
     });
-    var fixedHouseRentPerTenant = getFixedMonthlyHouseRentPerTenant();
-    return Promise.all([monthlySummary, fixedHouseRentPerTenant]).then(function (values) {
-
-        values[0].total = values[0].total + values[1];
+    return Promise.all([monthlySummary, getHouseConfig()]).then(function (values) {
+        values[0].total = (values[0].total + parseFloat(values[1].total_rent)) / parseInt(values[1].num_of_tenants);
         return values[0];
     });
 }

@@ -44,44 +44,47 @@ router.get('/breakdown',
 
         Promise.all([houseConfig, tenantMonthlyUtilSummary, perPersonUtilSummary]).then(function (values) {
 
+            var houseRentConfig = values[0];
+            var tenantMonthlyUtilSummary = values[1];
+            var perPersonUtilSummary = values[2];
+            var rentPerPerson = parseFloat(houseRentConfig.total_rent / houseRentConfig.num_of_tenants);
             var result = {
 
                 data: [{
                     costType: 'Fixed Rent',
-                    totalSpent: parseFloat(values[0].total_rent),
-                    noOfTenants: values[0].num_of_tenants,
-
-                    yourShare: parseFloat(values[0].total_rent / values[0].num_of_tenants),
+                    totalSpent: parseFloat(houseRentConfig.total_rent),
+                    noOfTenants: houseRentConfig.num_of_tenants,
+                    yourShare: rentPerPerson,
                     yourContribution: 0,
-                    youOwe: parseFloat(values[0].total_rent / values[0].num_of_tenants),
+                    youOwe: rentPerPerson,
                     formula: '(Fixed Rent / Number Of Tenants)'
 
                 }, {
                     costType: 'Gas',
-                    totalSpent: parseFloat(values[2].util.gas),
-                    noOfTenants: values[0].num_of_tenants,
+                    totalSpent: parseFloat(perPersonUtilSummary.util.gas),
+                    noOfTenants: houseRentConfig.num_of_tenants,
 
-                    yourShare: parseFloat(values[2].util.gas / values[0].num_of_tenants),
-                    yourContribution: parseFloat(values[1].util.gas),
-                    youOwe: parseFloat((values[2].util.gas / values[0].num_of_tenants) - (values[1].util.gas)),
+                    yourShare: parseFloat(perPersonUtilSummary.util.gas / houseRentConfig.num_of_tenants),
+                    yourContribution: parseFloat(tenantMonthlyUtilSummary.util.gas),
+                    youOwe: parseFloat((perPersonUtilSummary.util.gas / houseRentConfig.num_of_tenants) - (tenantMonthlyUtilSummary.util.gas)),
                     formula: '(Amount Spent On Gas / Number Of Tenants) - Your Contribution'
                 }, {
                     costType: 'Electricity',
-                    totalSpent: parseFloat(values[2].util.electricity),
-                    noOfTenants: values[0].num_of_tenants,
+                    totalSpent: parseFloat(perPersonUtilSummary.util.electricity),
+                    noOfTenants: houseRentConfig.num_of_tenants,
 
-                    yourShare: parseFloat(values[2].util.electricity / values[0].num_of_tenants),
-                    yourContribution: parseFloat(values[1].util.electricity),
-                    youOwe: parseFloat((values[2].util.electricity / values[0].num_of_tenants) - (values[1].util.electricity)),
+                    yourShare: parseFloat(perPersonUtilSummary.util.electricity / houseRentConfig.num_of_tenants),
+                    yourContribution: parseFloat(tenantMonthlyUtilSummary.util.electricity),
+                    youOwe: parseFloat((perPersonUtilSummary.util.electricity / houseRentConfig.num_of_tenants) - (tenantMonthlyUtilSummary.util.electricity)),
                     formula: '(Amount Spent On Electricity / Number Of Tenants) - Your Contribution'
                 }, {
                     costType: 'Household',
-                    totalSpent: values[2].util.household,
-                    noOfTenants: values[0].num_of_tenants,
+                    totalSpent: perPersonUtilSummary.util.household,
+                    noOfTenants: houseRentConfig.num_of_tenants,
 
-                    yourShare: values[2].util.household / values[0].num_of_tenants,
-                    yourContribution: values[1].util.household,
-                    youOwe: (values[2].util.household / values[0].num_of_tenants) - (values[1].util.household),
+                    yourShare: perPersonUtilSummary.util.household / houseRentConfig.num_of_tenants,
+                    yourContribution: tenantMonthlyUtilSummary.util.household,
+                    youOwe: (perPersonUtilSummary.util.household / houseRentConfig.num_of_tenants) - (tenantMonthlyUtilSummary.util.household),
                     formula: '(Amount Spent On Household / Number Of Tenants) - Your Contribution'
                 }]
             };
@@ -95,7 +98,7 @@ router.get('/breakdown',
                 yourTotalContribution: _.sum(result.data, function (cost) {
                     return cost.yourContribution;
                 }),
-                youOweTotal: values[1].total
+                youOweTotal: tenantMonthlyUtilSummary.total
 
             };
             console.dir(result);
