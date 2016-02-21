@@ -41,6 +41,7 @@ block content
               |                                             
               th Who Paid?
               |                                             
+              th Category
               th What was it?
               |                                             
               th Amount
@@ -56,7 +57,8 @@ block content
                     |                                             
                     td= item.tenantName
                     |                                             
-                    td= expenses.utilType + (item.costName ?'-' + item.costName: '')
+                    td= expenses.utilType
+                    td= (item.costName ? item.costName: '')
                     |                                             
                     td.center= '£'+expenses.amount
                     |                                             
