@@ -38,7 +38,7 @@ block content
                     |                                             
                     td= item.tenantName
                     |                                             
-                    td= expenses.utilType
+                    td= expenses.utilType + (item.costName ?'-' + item.costName: '')
                     |                                             
                     td.center= '£'+expenses.amount
                     |                                             

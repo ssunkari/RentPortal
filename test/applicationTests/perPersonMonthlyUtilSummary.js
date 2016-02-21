@@ -33,6 +33,7 @@ describe('Tenant monthly util breakdown', function () {
                     "shared": 5,
                     "utilType": "gas"
                 }],
+                "costName": "undefined",
                 "purchaseDate": "2016-03-14",
                 "tenantName": "Srinu"
             }, {
@@ -41,6 +42,7 @@ describe('Tenant monthly util breakdown', function () {
                     "shared": 10,
                     "utilType": "electricity"
                 }],
+                "costName": "undefined",
                 "purchaseDate": "2016-03-15",
                 "tenantName": "Srinu"
             }];

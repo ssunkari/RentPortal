@@ -46,9 +46,11 @@ module.exports = {
         }).map(function (userUtilInfoByDay) {
 
             if (userUtilInfoByDay) {
+                console.log(userUtilInfoByDay.costName);
                 var modifiedEnpensesObj = {
                     purchaseDate: userUtilInfoByDay.selectedDay,
                     tenantName: userUtilInfoByDay.tenants,
+                    costName: userUtilInfoByDay.costName,
                     expenses: []
                 };
                 if (userUtilInfoByDay.gas) {

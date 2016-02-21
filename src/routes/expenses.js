@@ -63,16 +63,15 @@ router.get('/breakdown',
                     costType: 'Gas',
                     totalSpent: parseFloat(perPersonUtilSummary.util.gas).toFixed(2),
                     noOfTenants: houseRentConfig.num_of_tenants,
-
                     yourShare: (parseFloat(perPersonUtilSummary.util.gas) / houseRentConfig.num_of_tenants).toFixed(2),
                     yourContribution: parseFloat(tenantMonthlyUtilSummary.util.gas).toFixed(2),
                     youOwe: (parseFloat(perPersonUtilSummary.util.gas) / parseInt(houseRentConfig.num_of_tenants)) - parseFloat(tenantMonthlyUtilSummary.util.gas),
                     formula: '(Amount Spent On Gas / Number Of Tenants) - Your Contribution'
                 }, {
+
                     costType: 'Electricity',
                     totalSpent: parseFloat(perPersonUtilSummary.util.electricity),
                     noOfTenants: houseRentConfig.num_of_tenants,
-
                     yourShare: parseFloat(perPersonUtilSummary.util.electricity) / parseInt(houseRentConfig.num_of_tenants),
                     yourContribution: parseFloat(tenantMonthlyUtilSummary.util.electricity),
                     youOwe: (parseFloat(perPersonUtilSummary.util.electricity) / parseInt(houseRentConfig.num_of_tenants)) - parseFloat(tenantMonthlyUtilSummary.util.electricity),
@@ -167,8 +166,8 @@ router.post('/', function (req, res) {
 function cannonicalInput(form, tenantName) {
     var input = {
         selectedDay: form.selectedDay,
-        tenants: tenantName
-
+        tenants: tenantName,
+        costName: form.costName
     };
     switch (form.utilType) {
     case 'gas':

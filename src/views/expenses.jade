@@ -36,10 +36,14 @@ block content
                label
                 input#optionsRadiosInline3(type='radio', name='utilType', value='household')
                 | HouseHold
+             .form-group
+              label Cost Name
+              input.form-control(type='text', name='costName')
              .form-group.input-group
               span.input-group-addon
                   i.fa.fa-gbp
               input.form-control(type='text', name='amount', required='',placeholder='Enter Amount')
+
              .form-group
               button.btn.btn-primary.btn-lg(type='submit') Submit
               label.error-label
