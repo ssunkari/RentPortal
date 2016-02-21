@@ -7,13 +7,30 @@ block content
     #page-wrapper
      .row
       .col-lg-12
-       h1.page-header Your monthly util summary
+       h1.page-header Cost Share Summary
         // /.col-lg-12
      .row
       .col-lg-12
        .pane.panel-default
         .panel-heading
-         | cost share summary
+          .row
+              form(role="form" name="expensesSheet", action='/expenses/houseshares?user=#{user}', method="get")    
+                .col-lg-1
+                  .form-group
+                    label From
+                .col-lg-2
+                  .form-group
+                    input.form-control#datepicker(type='date', name='startDate', required='')
+                    input.form-control#datepicker(type='hidden', name='user', value='#{user}')
+                .col-lg-1
+                  .form-group
+                    label To
+                .col-lg-2
+                  .form-group
+                    input.form-control#datepicker(type='date', name='endDate', required='')
+                .col-lg-2
+                  .form-group
+                     button.btn.btn-primary.btn-small(type='submit') View
         .panel-body
          .dataTable_wrapper
           table#dataTables-example.table.table-striped.table-bordered.table-hover(width='100%')

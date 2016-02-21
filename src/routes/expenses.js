@@ -118,7 +118,13 @@ function viewHouseShares(startDate, endDate, user) {
 router.get('/houseshares',
     //   require('connect-ensure-login').ensureLoggedIn('/'),
     function (req, res) {
-        viewHouseShares(req.query.startDate, req.query.endDate, req.query.user).then(function (result) {
+
+        var startDate = req.query.startDate || req.body.startDate;
+        var endDate = req.query.endDate || req.body.endDate;
+        var type = req.query.type || req.body.type;
+        var user = type ? '*' : req.query.user;
+
+        viewHouseShares(startDate, endDate, user, type).then(function (result) {
             res.render('houseshares', {
                 user: req.query.user,
                 title: 'Rent Portal',
