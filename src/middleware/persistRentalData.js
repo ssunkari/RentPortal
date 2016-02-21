@@ -203,16 +203,16 @@ function perPersonMonthlySummary(ctx) {
     .then(function (tenantsUtilArray) {
 
         var totalUtilityExpensesForMonthForAlltenants = _.sum(tenantsUtilArray, function (util) {
-            return util.gas | 0 + util.electricity | 0 + util.household | 0;
+            return util.gas || 0 + util.electricity || 0 + util.household || 0;
         });
         var gas = _.sum(tenantsUtilArray, function (util) {
-            return util.gas | 0;
+            return util.gas || 0;
         });
         var electricity = _.sum(tenantsUtilArray, function (util) {
-            return util.electricity | 0;
+            return util.electricity || 0;
         });
         var household = _.sum(tenantsUtilArray, function (util) {
-            return util.household | 0;
+            return util.household || 0;
         });
         var response = {
             year: ctx.year,
