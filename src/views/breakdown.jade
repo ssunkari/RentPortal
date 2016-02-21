@@ -1,0 +1,44 @@
+extends custom
+
+block content
+  #page-wrapper
+   .row
+        .col-lg-12
+          .panel.panel-default
+            .panel-heading
+              | How your expenses are calculated
+            // /.panel-heading
+            .panel-body
+              .table-responsive
+                table.table.table-striped.table-bordered.table-hover
+                  thead
+                    tr.success
+                      th Cost Type
+                      th Number Of Tenants
+                      th Total Spent                      
+                      th Your Share
+                      th Your Contribution
+                      th You Owe
+                      th Formula
+                  tbody
+                    each cost in result.data
+                      tr
+                        td=cost.costType
+                        td=cost.noOfTenants
+                        td=cost.totalSpent
+                        td=cost.yourShare
+                        td=cost.yourContribution
+                        td=cost.youOwe
+                        td=cost.formula
+                     tr.danger
+                      td Total
+                      td 
+                      td=result.totals.totalSpent
+                      td=result.totals.yourTotalShare
+                      td=result.totals.yourTotalContribution
+                      td=result.totals.youOweTotal
+                      td
+
+              // /.table-responsive
+            // /.panel-body
+          // /.panel

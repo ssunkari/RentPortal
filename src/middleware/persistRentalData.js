@@ -80,6 +80,11 @@ function getFixedMonthlyHouseRentPerTenant() {
         });
 }
 
+function getHouseConfig() {
+    return redisStore
+        .getByKey('35::stanley');
+}
+
 function getUtilYearlySummary(ctx) {
     var monthsInYear = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
     var responses = monthsInYear.map(function (month) {
@@ -243,5 +248,6 @@ module.exports = {
     perPersonMonthlySummary: perPersonMonthlySummary,
     getUtilYearlySummary: getUtilYearlySummary,
     save: save,
-    removeExpense: removeExpense
+    removeExpense: removeExpense,
+    getHouseConfig: getHouseConfig
 };
