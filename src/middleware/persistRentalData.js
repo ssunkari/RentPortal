@@ -50,7 +50,7 @@ function getTenantMonthlySummary(ctx) {
     var getTenantSummary = getMonthlyTenantSummary(key, ctx);
 
     return getTenantSummary.then(function (tenantSummary) {
-        response.total = tenantSummary.total;
+        response.total = parseFloat(tenantSummary.total).toFixed(2);
         response.runningTotal = tenantSummary.runningTotal;
         response.util = {
             gas: tenantSummary.gas,
