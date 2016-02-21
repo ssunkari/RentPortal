@@ -1,4 +1,11 @@
 $(function () {
+    var date = new Date();
+    var currentYear = date.getFullYear();
+    var curMonth = date.getMonth() + 1;
+    if (curMonth < 10) {
+        curMonth = '0' + curMonth;
+    }
+
     Array.prototype.find = function (predicate) {
         if (this === null) {
             throw new TypeError('Array.prototype.find called on null or undefined');
@@ -26,7 +33,7 @@ $(function () {
         });
     }
 
-    $.get("/total/2016/Srinu", function (result) {
+    $.get("/total/" + currentYear + "/Srinu", function (result) {
         var monthNames = ['Jan',
             'Feb', 'Mar', 'Apr', 'May', 'Jun',
             'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
@@ -49,20 +56,20 @@ $(function () {
             resize: true
         });
     });
-    $.get("/util/total/2016", function (result) {
+    $.get("/util/total/" + currentYear, function (result) {
         var monthNames = [
-            '2016-01-12T19:22:47.390Z',
-            '2016-02-12T19:22:47.390Z',
-            '2016-03-12T19:22:47.390Z',
-            '2016-04-12T19:22:47.390Z',
-            '2016-05-12T19:22:47.390Z',
-            '2016-06-12T19:22:47.390Z',
-            '2016-07-12T19:22:47.390Z',
-            '2016-08-12T19:22:47.390Z',
-            '2016-09-12T19:22:47.390Z',
-            '2016-10-12T19:22:47.390Z',
-            '2016-11-12T19:22:47.390Z',
-            '2016-12-12T19:22:47.390Z',
+            currentYear + '-01-12T19:22:47.390Z',
+            currentYear + '-02-12T19:22:47.390Z',
+            currentYear + '-03-12T19:22:47.390Z',
+            currentYear + '-04-12T19:22:47.390Z',
+            currentYear + '-05-12T19:22:47.390Z',
+            currentYear + '-06-12T19:22:47.390Z',
+            currentYear + '-07-12T19:22:47.390Z',
+            currentYear + '-08-12T19:22:47.390Z',
+            currentYear + '-09-12T19:22:47.390Z',
+            currentYear + '-10-12T19:22:47.390Z',
+            currentYear + '-11-12T19:22:47.390Z',
+            currentYear + '-12-12T19:22:47.390Z',
         ];
         var yearlyRentFigures = result;
         var electricityData = filterArrayBy(result, 'electricity');
@@ -91,7 +98,7 @@ $(function () {
         });
     });
 
-    $.get("all/total/2016/03", function (result) {
+    $.get("all/total/" + currentYear + "/" + curMonth, function (result) {
 
         Morris.Donut({
             element: 'current-month-util-summary',
