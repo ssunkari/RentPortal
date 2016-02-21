@@ -8,9 +8,33 @@ var records = [{
     }]
 }, {
     id: 2,
-    username: 'jill',
-    password: 'birthday',
-    displayName: 'Jill',
+    username: 'Vikram',
+    password: '123456',
+    displayName: 'Vikram',
+    emails: [{
+        value: 'jill@example.com'
+    }]
+}, {
+    id: 2,
+    username: 'Jorge',
+    password: '123456',
+    displayName: 'Jorge',
+    emails: [{
+        value: 'jill@example.com'
+    }]
+}, {
+    id: 2,
+    username: 'Sam',
+    password: '123456',
+    displayName: 'Sam',
+    emails: [{
+        value: 'jill@example.com'
+    }]
+}, {
+    id: 2,
+    username: 'Rasmus',
+    password: '123456',
+    displayName: 'Rasmus',
     emails: [{
         value: 'jill@example.com'
     }]
