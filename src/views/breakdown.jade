@@ -25,18 +25,18 @@ block content
                       tr
                         td=cost.costType
                         td=cost.noOfTenants
-                        td=cost.totalSpent
-                        td=cost.yourShare
-                        td=cost.yourContribution
-                        td=cost.youOwe
+                        td='£'+cost.totalSpent
+                        td='£'+cost.yourShare
+                        td='£'+cost.yourContribution
+                        td='£'+cost.youOwe
                         td=cost.formula
                      tr.danger
                       td Total
                       td 
-                      td=result.totals.totalSpent
-                      td=result.totals.yourTotalShare
-                      td=result.totals.yourTotalContribution
-                      td=result.totals.youOweTotal
+                      td='£'+result.totals.totalSpent
+                      td='£'+result.totals.yourTotalShare
+                      td='£'+result.totals.yourTotalContribution
+                      td='£'+result.totals.youOweTotal
                       td
 
               // /.table-responsive
