@@ -63,7 +63,7 @@ block content
                     td.center= '£'+expenses.amount
                     |                                             
                     td.center= '£'+expenses.shared
-                     if !type
+                     if type !== 'all'
                       td.center.button.btn.btn-warning.btn-square(type='button', name="deleteBtn#{item.expenses.indexOf(expenses)}" onclick='onDelete(rid_'+i+')')
                               i.fa.fa-times
 

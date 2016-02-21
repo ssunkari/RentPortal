@@ -99,7 +99,6 @@ $(function () {
     });
 
     $.get("all/total/" + currentYear + "/" + curMonth, function (result) {
-
         Morris.Donut({
             element: 'current-month-util-summary',
             data: result.map(function (user) {
