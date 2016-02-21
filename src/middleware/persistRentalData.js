@@ -63,7 +63,7 @@ function getTenantMonthlySummary(ctx) {
 }
 
 function getAllTenantsMonthlySummary(ctx) {
-    var listOfTenants = ['Srinu', 'George', 'Sam', 'Vikram'];
+    var listOfTenants = ['Srinu', 'George', 'Sam', 'Vikram', 'Rasmus'];
     return Promise.all(listOfTenants.map(function (tenant) {
         ctx.tenantName = tenant;
         return getTenantMonthlySummary(ctx);
