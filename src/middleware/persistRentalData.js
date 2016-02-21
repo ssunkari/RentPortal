@@ -167,7 +167,7 @@ function getMonthlyTenantSummary(key, ctx) {
         .then(function (values) {
             console.log('per person monthly summary');
             var utils = values[1];
-            var total = values[0].total - utils.runningTotal;
+            var total = parseFloat(values[0].total - utils.runningTotal).toFixed(2);
             return {
                 total: total,
                 runningTotal: utils.gas + utils.electricity + utils.household,
@@ -224,7 +224,7 @@ function perPersonMonthlySummary(ctx) {
         return response;
     });
     return Promise.all([monthlySummary, getHouseConfig()]).then(function (values) {
-        values[0].total = (values[0].total + parseFloat(values[1].total_rent)) / parseInt(values[1].num_of_tenants);
+        values[0].total = parseFloat(values[0].total + parseFloat(values[1].total_rent)) / parseInt(values[1].num_of_tenants).toFixed(2);
         return values[0];
     });
 }
