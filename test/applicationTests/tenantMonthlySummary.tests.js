@@ -179,7 +179,7 @@ describe('Tenant monthly summary', function () {
                     tenantName: 'Srinu',
                     year: '2016',
                     month: '03',
-                    total: 157.5,
+                    total: "157.50",
                     runningTotal: 20,
                     util: {
                         gas: 20,
@@ -191,7 +191,7 @@ describe('Tenant monthly summary', function () {
                     year: '2016',
                     month: '03',
                     runningTotal: 40,
-                    total: 137.5,
+                    total: "137.50",
                     util: {
                         gas: 40,
                         electricity: 0,
@@ -201,7 +201,7 @@ describe('Tenant monthly summary', function () {
                     tenantName: 'Sam',
                     year: '2016',
                     month: '03',
-                    total: 177.5,
+                    total: "177.50",
                     runningTotal: 0,
                     util: {
                         gas: 0,
@@ -212,13 +212,24 @@ describe('Tenant monthly summary', function () {
                     tenantName: 'Vikram',
                     year: '2016',
                     month: '03',
-                    total: 177.5,
+                    total: "177.50",
                     runningTotal: 0,
                     util: {
                         gas: 0,
                         electricity: 0,
                         household: 0
                     }
+                }, {
+                    month: "03",
+                    runningTotal: 0,
+                    tenantName: "Rasmus",
+                    total: "177.50",
+                    util: {
+                        "electricity": 0,
+                        "gas": 0,
+                        "household": 0
+                    },
+                    year: "2016"
                 }];
                 messageTester.roomTotalTester({
                     year: '2016',
