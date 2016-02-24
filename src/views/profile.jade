@@ -1,6 +1,8 @@
 extends custom
 
 block content
+  script(src='/socket.io/socket.io.js')
+  script(src='/javascripts/main.js')
   #page-wrapper
    .row
     .col-lg-3.col-md-6
@@ -488,6 +490,36 @@ block content
                 |                                         
                 p
                   | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
+            |                                 
+            li.right.clearfix
+              span.chat-img.pull-right
+                img.img-circle(src='http://placehold.it/50/FA6F57/fff', alt='User Avatar')
+              |                                     
+              .chat-body.clearfix
+                .header
+                  small.text-muted
+                    i.fa.fa-clock-o.fa-fw
+                    |  15 mins ago
+                  |                                             
+                  strong.pull-right.primary-font Bhaumik Patel
+                |                                         
+                p
+                  | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
+            |                                 
+            li.right.clearfix
+              span.chat-img.pull-right
+                img.img-circle(src='http://placehold.it/50/FA6F57/fff', alt='User Avatar')
+              |                                     
+              .chat-body.clearfix
+                .header
+                  small.text-muted
+                    i.fa.fa-clock-o.fa-fw
+                    |  15 mins ago
+                  |                                             
+                  strong.pull-right.primary-font Bhaumik Patel
+                |                                         
+                p
+                  | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
         // /.panel-body
         .panel-footer
           .input-group
@@ -498,6 +530,8 @@ block content
                 | Send
         // /.panel-footer
       // /.panel .chat-panel
-    // /.col-lg-4         
+    // /.col-lg-4
+    //Hidden fields
+    .user.hidden #{user}      
   script(src='/morrisjs/morris.min.js')
   script(src='/morrisjs/morris-data.js')       

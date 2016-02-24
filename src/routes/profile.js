@@ -26,35 +26,34 @@ router.get('/:user',
 
     });
 
-router.get('/total/:year/:month/:tenant', function (req, res) {
-    persistRentalData.getTenantMonthlySummary(normalizedCtx(req.params)).then(function (data) {
-        return res.json(data);
-    });
-});
+// router.get('/total/:year/:month/:tenant', function (req, res) {
+//     persistRentalData.getTenantMonthlySummary(normalizedCtx(req.params)).then(function (data) {
+//         return res.json(data);
+//     });
+// });
 
-router.get('/all/total/:year/:month', function (req, res) {
-    persistRentalData.getAllTenantsMonthlySummary(normalizedCtx(req.params)).then(function (data) {
-        return res.json(data);
-    });
-});
-router.get('/perperson/total/:year/:month', function (req, res) {
-    persistRentalData.perPersonMonthlySummary(normalizedCtx(req.params)).then(function (data) {
-        return res.json(data);
-    });
-});
+// router.get('/all/total/:year/:month', function (req, res) {
+//     persistRentalData.getAllTenantsMonthlySummary(normalizedCtx(req.params)).then(function (data) {
+//         return res.json(data);
+//     });
+// });
+// router.get('/perperson/total/:year/:month', function (req, res) {
+//     persistRentalData.perPersonMonthlySummary(normalizedCtx(req.params)).then(function (data) {
+//         return res.json(data);
+//     });
+// });
 
-router.get('/total/:year/:tenant', function (req, res) {
-    persistRentalData.getTenantYearlySummary(normalizedCtx(req.params)).then(function (data) {
-        return res.json(data);
-    });
-});
+// router.get('/total/:year/:tenant', function (req, res) {
+//     persistRentalData.getTenantYearlySummary(normalizedCtx(req.params)).then(function (data) {
+//         return res.json(data);
+//     });
+// });
 
-router.get('/util/total/:year', function (req, res) {
-    persistRentalData.getUtilYearlySummary(normalizedCtx(req.params)).then(function (data) {
-        return res.json(data);
-    });
-});
-
+// router.get('/util/total/:year', function (req, res) {
+//     persistRentalData.getUtilYearlySummary(normalizedCtx(req.params)).then(function (data) {
+//         return res.json(data);
+//     });
+// });
 function validate(formFields) {
     if (!formFields.tenants) {
         errors.push('Select tenant from the drop down list');
@@ -101,14 +100,14 @@ router.post('/update_expenses_sheets', function (req, res) {
     }
 });
 
-function normalizedCtx(ctx) {
-    var month = ctx.month || '';
-    var tenantName = ctx.tenant || '';
-    return {
-        year: ctx.year.replace(':', ''),
-        month: month.replace(':', ''),
-        tenantName: tenantName.replace(':', '')
-    };
-}
+// function normalizedCtx(ctx) {
+//     var month = ctx.month || '';
+//     var tenantName = ctx.tenant || '';
+//     return {
+//         year: ctx.year.replace(':', ''),
+//         month: month.replace(':', ''),
+//         tenantName: tenantName.replace(':', '')
+//     };
+// }
 
 module.exports = router;
